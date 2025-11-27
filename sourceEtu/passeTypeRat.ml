@@ -138,7 +138,7 @@ let analyse_type_fonction (AstTds.Fonction(t, info, lp, li)) =
   AstType.Fonction(info, nlpi, nli)
   
 
-(* analyser : AstTds.programme -> Asttype.programme *)
+(* analyser : AstTds.programme -> AstType.programme *)
 (* Paramètre : le programme à analyser *)
 (* Vérifie la bonne utilisation des identifiants et tranforme le programme
 en un programme de type Asttype.programme *)
