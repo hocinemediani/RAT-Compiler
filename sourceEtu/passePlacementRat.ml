@@ -65,7 +65,23 @@ and analyse_placement_bloc li depl reg =
 en une fonction de type Asttype.fonction *)
 (* Erreur si mauvaise utilisation des identifiants *)
 let analyse_placement_fonction (AstType.Fonction(info, lp, li)) =
-  failwith "RAAAAAAH"
+  let oia::q = List.rev lp in
+  let InfoVar(_, typ1, _, _) = info_ast_to_info oia in
+  let rec placement_variables lvar depl =
+    match List.rev lvar with
+    | [] -> []
+    | ia::q ->
+      begin
+        match info_ast_to_info ia with
+        | InfoVar (_, t, _, _) ->
+          modifier_adresse_variable depl "LB" ia;
+          ia::(placement_variables q (depl - getTaille t))
+        | _ -> failwith "Erreur interne"
+      end
+    in let nlp = placement_variables lp (-(getTaille typ1)) in
+  let nli = analyse_placement_bloc li 3 "LB" in
+  AstPlacement.Fonction(info, nlp, nli)
+  
   
 
 (* analyser : AstTds.programme -> AstType.programme *)
