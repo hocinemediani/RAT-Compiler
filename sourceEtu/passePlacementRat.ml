@@ -9,7 +9,6 @@ open AstPlacement
 type t1 = Ast.AstType.programme
 type t2 = Ast.AstPlacement.programme
 
-
 (* analyse_type_instruction : type -> info_ast option -> AstType.instruction -> Astplacement.instruction *)
 (* Paramètre oia : None si l'instruction i est dans le bloc principal,
                    Some ia où ia est l'information associée à la fonction dans laquelle est l'instruction i sinon *)
@@ -31,11 +30,11 @@ let rec analyse_placement_instruction i depl reg =
   | AstType.AffichageRat e -> (AstPlacement.AffichageRat (e), 0)
   | AstType.AffichageBool e -> (AstPlacement.AffichageBool (e), 0)
   | AstType.Conditionnelle (c, t, e) ->
-    let (nt, tt) = analyse_placement_bloc t depl reg in
-    let (ne, te) = analyse_placement_bloc e depl reg in
+    let nt = analyse_placement_bloc t depl reg in
+    let ne = analyse_placement_bloc e depl reg in
     (AstPlacement.Conditionnelle (c, nt, ne), 0)
   | AstType.TantQue (c, b) ->
-    let (nb, tb) = analyse_placement_bloc b depl reg in
+    let nb = analyse_placement_bloc b depl reg in
     (AstPlacement.TantQue (c, nb), 0)
   | AstType.Retour (e, ia) ->
     begin
@@ -65,10 +64,8 @@ and analyse_placement_bloc li depl reg =
 (* Vérifie la bonne utilisation des identifiants et tranforme la fonction
 en une fonction de type Asttype.fonction *)
 (* Erreur si mauvaise utilisation des identifiants *)
-let analyse_placement_fonction (AstPlacement.Fonction(t, info, lp, li)) =
-  let nli = analyse_placement_bloc li 0 "LB" in
-  let (_, nlpi) = List.split lp in
-  AstType.Fonction(info, nlpi, nli)
+let analyse_placement_fonction (AstType.Fonction(info, lp, li)) =
+  failwith "RAAAAAAH"
   
 
 (* analyser : AstTds.programme -> AstType.programme *)
