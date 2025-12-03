@@ -9,12 +9,6 @@ open AstPlacement
 type t1 = Ast.AstType.programme
 type t2 = Ast.AstPlacement.programme
 
-let recuperer_type info =
-  match info_ast_to_info info with
-  | InfoVar(_, t, _, _) -> t
-  | InfoFun(_, t, _) -> t
-  | _ -> failwith "Erreur interne"
-
 
 (* analyse_type_instruction : type -> info_ast option -> AstType.instruction -> Astplacement.instruction *)
 (* Paramètre oia : None si l'instruction i est dans le bloc principal,
