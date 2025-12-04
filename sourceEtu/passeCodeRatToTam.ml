@@ -38,7 +38,7 @@ let rec analyse_code_expression e =
     if b then (loadl_int 1)
     else (loadl_int 0)
   | AstType.Entier i -> (loadl_int i)
-  | AstType.Unaire (u, e2) -> (analyse_code_expression e2) ^ (if u = Numerateur then (pop 0 1) else (pop 1 1)) ^ (call "SB" (label "norm"))
+  | AstType.Unaire (u, e2) -> (analyse_code_expression e2) ^ (if u = Numerateur then (pop 0 1) else (pop 1 0)) ^ (call "SB" (label "norm"))
   | AstType.Binaire (b, e2, e3) ->
     begin
       (analyse_code_expression e2) ^ (analyse_code_expression e3) ^ (
@@ -111,4 +111,4 @@ let analyse_code_fonction (AstPlacement.Fonction(info, lp, (li, taille))) =
 en un programme de type Asttype.programme *)
 (* Erreur si mauvaise utilisation des identifiants *)
 let analyser (AstPlacement.Programme (fonctions, prog)) =
-  getEntete() ^ (List.fold_right(fun i acc -> (analyse_code_fonction i) ^ acc) fonctions "") ^ (label "main") ^ (analyse_code_bloc prog)
+  getEntete() ^ (List.fold_right(fun i acc -> (analyse_code_fonction i) ^ acc) fonctions "") ^ (label "main") ^ (analyse_code_bloc prog) ^ halt
