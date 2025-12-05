@@ -27,7 +27,7 @@ let rec analyse_type_expression e =
       let l = List.map analyse_type_expression el in
       let (lne, lte) = List.split l in
       match info_ast_to_info info with
-      | InfoFun(n, tr, ltp) ->
+      | InfoFun(_, tr, ltp) ->
         if Type.est_compatible_list ltp lte
         then (AstType.AppelFonction (info, lne), tr)
         else raise (Exceptions.TypesParametresInattendus (lte, ltp))
@@ -59,7 +59,6 @@ let rec analyse_type_expression e =
     | (Inf, Int, Int) -> (AstType.Binaire (Inf, ne2, ne3), Bool)
     | (Fraction, Int, Int) -> (AstType.Binaire (Fraction, ne2, ne3), Rat)
     | _ -> raise (TypeBinaireInattendu (op, te2, te3))
-  | _ ->  failwith "Erreur interne"
 
 
 (* analyse_type_instruction : type -> info_ast option -> AstTds.instruction -> Asttype.instruction *)
@@ -132,7 +131,7 @@ and analyse_type_bloc li =
 (* Vérifie la bonne utilisation des identifiants et tranforme la fonction
 en une fonction de type Asttype.fonction *)
 (* Erreur si mauvaise utilisation des identifiants *)
-let analyse_type_fonction (AstTds.Fonction(t, info, lp, li)) =
+let analyse_type_fonction (AstTds.Fonction(_, info, lp, li)) =
   let nli = analyse_type_bloc li in
   let (_, nlpi) = List.split lp in
   AstType.Fonction(info, nlpi, nli)

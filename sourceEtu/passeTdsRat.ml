@@ -17,14 +17,13 @@ let rec analyse_tds_expression tds e =
   match e with
   | AstSyntax.AppelFonction (s, el) -> 
     begin
-      let opt = Tds.chercherGlobalement tds s in
-      match opt with
+      match Tds.chercherGlobalement tds s with
       | None -> raise (Exceptions.IdentifiantNonDeclare s)
       | Some i -> 
         begin
           let ael = List.map (analyse_tds_expression tds) el in
           match Tds.info_ast_to_info i with
-          | Tds.InfoFun (_, _, elref) -> AstTds.AppelFonction (i, ael)
+          | Tds.InfoFun (_, _, _) -> AstTds.AppelFonction (i, ael)
           | _ -> raise (Exceptions.MauvaiseUtilisationIdentifiant s)
         end
     end
@@ -45,7 +44,6 @@ let rec analyse_tds_expression tds e =
   | AstSyntax.Entier i -> AstTds.Entier i
   | AstSyntax.Unaire (u, e2) -> AstTds.Unaire (u, (analyse_tds_expression tds e2))
   | AstSyntax.Binaire (b, e2, e3) -> AstTds.Binaire (b, (analyse_tds_expression tds e2), (analyse_tds_expression tds e3))
-  | _ ->  failwith "Erreur interne"
 
 
 (* analyse_tds_instruction : tds -> info_ast option -> AstSyntax.instruction -> AstTds.instruction *)
@@ -169,15 +167,22 @@ and analyse_tds_bloc tds oia li =
   (* Analyse des instructions du bloc avec la tds du nouveau bloc.
      Cette tds est modifiée par effet de bord *)
    let nli = List.map (analyse_tds_instruction tdsbloc oia) li in
-   (* afficher_locale tdsbloc ; *) (* décommenter pour afficher la table locale *)
    nli
 
-
+(* analyse_tds_parametre : tds -> typ -> String -> typ * info_ast *)
+(* Parametre tds : la table des symboles courante. *)
+(* Parametre t : le type de la variable. *)
+(* Parametre n : le nom de la variable. *)
+(* Fonction helper pour ajouter a la tds courante une variable, qui retourne
+un couple type de la variable et info_ast. *)
+(* raise DoubleDeclaration si la variable a deja ete declaree *)
 let analyse_tds_parametre tds t n =
   match chercherLocalement tds n with
-  | Some i -> raise (Exceptions.DoubleDeclaration n)
+  | Some _ -> raise (Exceptions.DoubleDeclaration n)
   | None ->
+    (* On creer une reference vers l'info, un info_ast. *)
     let ia = info_to_info_ast (InfoVar(n, t, 0, "")) in
+    (* On l'ajoute a la tds donnee. *)
     ajouter tds n ia;
     (t, ia)
 
@@ -189,13 +194,19 @@ en une fonction de type AstTds.fonction *)
 (* Erreur si mauvaise utilisation des identifiants *)
 let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li))  =
   match chercherGlobalement maintds n with
-  | Some i -> raise (Exceptions.DoubleDeclaration n)
+  | Some _ -> raise (Exceptions.DoubleDeclaration n)
   | None ->
+    (* On cree une tds pour la fonction. *)
     let tdsFille = creerTDSFille maintds in
+    (* On recupere la liste des types et la liste des noms des variables. *)
     let (lt, ln) = List.split lp in
+    (* On transforme les informations en info_ast. *)
     let infoAst = info_to_info_ast (Tds.InfoFun(n, t, lt)) in
+    (* On analyse toutes les variables de la tds de la fonction, puis on les ajoute
+    a la tds mere. *)
     let nlp = List.map2 (analyse_tds_parametre tdsFille) lt ln in
     ajouter maintds n infoAst;
+    (* On analyse les instructions du bloc de la fonction. *)
     let nli = analyse_tds_bloc tdsFille (Some infoAst) li in
     AstTds.Fonction(t, infoAst, nlp, nli)
 
