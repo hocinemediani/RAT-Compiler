@@ -45,6 +45,7 @@ open Ast.AstSyntax
 %type <typ> typ
 %type <typ*string> param
 %type <expression> e 
+%type <affectable> a
 
 (* Type et définition de l'axiome *)
 %start <Ast.AstSyntax.programme> main
@@ -78,7 +79,6 @@ typ :
 | BOOL    {Bool}
 | INT     {Int}
 | RAT     {Rat}
-| AFFECTABLE {Affectable}
 
 e : 
 | n=ID PO lp=separated_list(VIRG,e) PF   {AppelFonction (n,lp)}
