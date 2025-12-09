@@ -10,6 +10,24 @@ open Tam
 type t1 = AstPlacement.programme
 type t2 = string
 
+let rec analyse_code_affectable_lecture a =
+  match a with
+  | AstType.Ident info -> 
+    begin
+      match info_ast_to_info info with
+      | InfoVar(_, t, depl, reg) -> (load (getTaille t) depl reg)
+      | _ -> failwith "Erreur interne"
+    end
+
+let rec analyse_code_affectable_ecriture a =
+  match a with
+  | AstType.Ident info -> 
+    begin
+      match info_ast_to_info info with
+      | InfoVar(_, t, depl, reg) -> (store (getTaille t) depl reg)
+      | _ -> failwith "Erreur interne"
+    end
+
 (* analyse_code_expression : tds -> AstSyntax.expression -> AstTds.expression *)
 (* Paramètre e : l'expression à analyser *)
 (* Vérifie la bonne utilisation des identifiants et tranforme l'expression
@@ -24,12 +42,13 @@ let rec analyse_code_expression e =
         (List.fold_right (fun e acc -> (analyse_code_expression e) ^ acc) le "") ^ (call "SB" (label s))
       | _ -> failwith "Erreur interne"
     end
-  | AstType.Ident info -> 
+  | AstType.Affectable a -> analyse_code_affectable_lecture a
+  (*| AstType.Ident info -> 
     begin
       match info_ast_to_info info with
       | InfoVar(_, t, depl, reg) -> (load (getTaille t) depl reg)
       | _ -> failwith "Erreur interne"
-    end 
+    end *)
   | AstType.Booleen b -> 
     if b then (loadl_int 1)
     else (loadl_int 0)
@@ -66,13 +85,14 @@ let rec analyse_code_instruction i =
         (push (getTaille t)) ^ (analyse_code_expression e) ^ (store (getTaille t) depl reg)
       | _ ->  failwith "Erreur interne"
     end
-  | AstPlacement.Affectation (info, e) -> 
+  | AstPlacement.Affectation (a, e) -> (analyse_code_expression e) ^ (analyse_code_affectable_ecriture a)
+  (*| AstPlacement.Affectation (info, e) -> 
     begin
       match info_ast_to_info info with
       | InfoVar(_, t, depl, reg) -> 
         (analyse_code_expression e) ^ (store (getTaille t) depl reg)
       | _ ->  failwith "Erreur interne"
-    end
+    end*)
   | AstPlacement.AffichageInt e -> (analyse_code_expression e) ^ (subr (label "IOut"))
   | AstPlacement.AffichageRat e -> (analyse_code_expression e) ^ (call "SB" (label "rout"))
   | AstPlacement.AffichageBool e -> (analyse_code_expression e) ^ (subr (label "BOut"))

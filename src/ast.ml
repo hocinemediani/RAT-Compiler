@@ -170,9 +170,7 @@ end
 module AstPlacement =
 struct
 
-  type affectable =
-    | Ident of Tds.info_ast  (* le nom de l'identifiant est remplacé par ses informations *)
-
+type affectable = AstType.affectable
 
 (* Expressions existantes dans notre langage *)
 (* = expression de AstType  *)
