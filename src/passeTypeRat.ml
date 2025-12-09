@@ -14,6 +14,9 @@ let recuperer_type info =
   | InfoFun(_, t, _) -> t
   | _ -> failwith "Erreur interne"
 
+let rec analyse_type_affectable a =
+  match a with
+  | AstTds.Ident info -> (AstType.Ident info, recuperer_type info)
 
 (* analyse_type_expression : type -> AstTds.expression -> Asttype.expression *)
 (* Paramètre e : l'expression à analyser *)
@@ -33,7 +36,12 @@ let rec analyse_type_expression e =
         else raise (Exceptions.TypesParametresInattendus (lte, ltp))
       | _ -> failwith "Erreur interne"
     end
+  | AstTds.Affectable a ->
+    let (na, ta) = analyse_type_affectable a in
+    (AstType.Affectable na, ta)
+    (*
   | AstTds.Ident info -> (AstType.Ident info, recuperer_type info)
+  *)
   | AstTds.Booleen b -> (AstType.Booleen b, Bool)
   | AstTds.Entier i -> (AstType.Entier i, Int)
   | AstTds.Unaire (u, e2) ->
@@ -78,12 +86,20 @@ let rec analyse_type_instruction i =
       modifier_type_variable te info; AstType.Declaration (info, ne)
       end
     else raise (TypeInattendu (te, t))
+  | AstTds.Affectation (a, e) ->
+    let (na, ta) = analyse_type_affectable a in
+    let (ne, te) = analyse_type_expression e in
+    if (est_compatible ta te)
+    then AstType.Affectation (na, ne)
+    else raise (TypeInattendu (te, ta))
+    (*
   | AstTds.Affectation (info, e) ->
     let (ne, te) = analyse_type_expression e in
     let t = recuperer_type info in
     if (est_compatible t te)
     then AstType.Affectation (info, ne)
     else raise (TypeInattendu (te, t))
+    *)
   | AstTds.Affichage e ->
     begin
       let (ne, te) = analyse_type_expression e in

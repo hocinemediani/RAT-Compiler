@@ -127,11 +127,15 @@ type unaire = Numerateur | Denominateur
 (* Opérateurs binaires existants dans Rat - résolution de la surcharge *)
 type binaire = Fraction | PlusInt | PlusRat | MultInt | MultRat | EquInt | EquBool | Inf
 
+  type affectable =
+    | Ident of Tds.info_ast  (* le nom de l'identifiant est remplacé par ses informations *)
+
+
 (* Expressions existantes dans Rat *)
 (* = expression de AstTds *)
 type expression =
   | AppelFonction of Tds.info_ast * expression list
-  | Ident of Tds.info_ast
+  | Affectable of affectable
   | Booleen of bool
   | Entier of int
   | Unaire of unaire * expression
@@ -143,7 +147,7 @@ type expression =
 type bloc = instruction list
  and instruction =
   | Declaration of Tds.info_ast * expression
-  | Affectation of Tds.info_ast * expression
+  | Affectation of affectable * expression
   | AffichageInt of expression
   | AffichageRat of expression
   | AffichageBool of expression
@@ -166,6 +170,10 @@ end
 module AstPlacement =
 struct
 
+  type affectable =
+    | Ident of Tds.info_ast  (* le nom de l'identifiant est remplacé par ses informations *)
+
+
 (* Expressions existantes dans notre langage *)
 (* = expression de AstType  *)
 type expression = AstType.expression
@@ -174,7 +182,7 @@ type expression = AstType.expression
 type bloc = instruction list * int (* taille du bloc *)
  and instruction =
  | Declaration of Tds.info_ast * expression
- | Affectation of Tds.info_ast * expression
+ | Affectation of affectable * expression
  | AffichageInt of expression
  | AffichageRat of expression
  | AffichageBool of expression
