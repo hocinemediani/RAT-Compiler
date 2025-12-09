@@ -24,6 +24,7 @@ type binaire = Fraction | Plus | Mult | Equ | Inf
 
 type affectable =
   | Ident of string
+  | Deref of affectable
 
 (* Expressions de Rat *)
 type expression =
@@ -39,6 +40,9 @@ type expression =
   | Unaire of unaire * expression
   (* Opération binaire représentée par l'opérateur, l'opérande gauche et l'opérande droite *)
   | Binaire of binaire * expression * expression
+  | Null
+  | New of typ
+  | Adresse of affectable
 
 
 (* Instructions de Rat *)
@@ -78,6 +82,7 @@ struct
 
   type affectable =
     | Ident of Tds.info_ast  (* le nom de l'identifiant est remplacé par ses informations *)
+    | Deref of affectable
 
   (* Expressions existantes dans notre langage *)
   (* ~ expression de l'AST syntaxique où les noms des identifiants ont été
@@ -89,6 +94,9 @@ struct
     | Entier of int
     | Unaire of AstSyntax.unaire * expression
     | Binaire of AstSyntax.binaire * expression * expression
+    | Null
+    | New of typ
+    | Adresse of affectable
 
   (* instructions existantes dans notre langage *)
   (* ~ instruction de l'AST syntaxique où les noms des identifiants ont été
@@ -129,7 +137,7 @@ type binaire = Fraction | PlusInt | PlusRat | MultInt | MultRat | EquInt | EquBo
 
   type affectable =
     | Ident of Tds.info_ast  (* le nom de l'identifiant est remplacé par ses informations *)
-
+    | Deref of affectable
 
 (* Expressions existantes dans Rat *)
 (* = expression de AstTds *)
@@ -140,6 +148,9 @@ type expression =
   | Entier of int
   | Unaire of unaire * expression
   | Binaire of binaire * expression * expression
+  | Null
+  | New of typ
+  | Adresse of affectable
 
 (* instructions existantes Rat *)
 (* = instruction de AstTds + informations associées aux identificateurs, mises à jour *)

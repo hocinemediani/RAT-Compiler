@@ -13,13 +13,7 @@ let rec analyse_tds_affectable_lecture tds a =
     begin
       match Tds.chercherGlobalement tds s with
       | None -> raise (Exceptions.IdentifiantNonDeclare s)
-      | Some i ->
-        begin
-          match Tds.info_ast_to_info i with
-          | Tds.InfoVar _ -> AstTds.Affectable (AstTds.Ident i)
-          | Tds.InfoFun _ -> raise (Exceptions.MauvaiseUtilisationIdentifiant s)
-          | Tds.InfoConst (_, v) -> AstTds.Entier v
-        end
+      | Some i -> (AstTds.Ident i)
     end
   | _ -> failwith "Erreur interne"
 
@@ -64,7 +58,14 @@ let rec analyse_tds_expression tds e =
           | _ -> raise (Exceptions.MauvaiseUtilisationIdentifiant s)
         end
     end
-  | AstSyntax.Affectable a -> analyse_tds_affectable_lecture tds a
+  | AstSyntax.Affectable a ->
+    let (AstTds.Ident i) = analyse_tds_affectable_lecture tds a in
+    begin
+      match info_ast_to_info i with
+      | Tds.InfoVar _ -> (AstTds.Affectable (AstTds.Ident i))
+      | Tds.InfoConst (_, v) -> (AstTds.Entier v)
+      | Tds.InfoFun (n, _, _) -> raise(MauvaiseUtilisationIdentifiant n)
+    end
     (*
   | AstSyntax.Ident (s) ->
     begin

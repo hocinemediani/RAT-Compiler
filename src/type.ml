@@ -1,18 +1,19 @@
-type typ = Bool | Int | Rat | Undefined
+type typ = Bool | Int | Rat | Ptr of typ | Undefined
 
-let string_of_type t = 
+let rec string_of_type t = 
   match t with
   | Bool ->  "Bool"
   | Int  ->  "Int"
   | Rat  ->  "Rat"
+  | Ptr(typ) -> "Pointeur de " ^ (string_of_type typ)
   | Undefined -> "Undefined"
 
-
-let est_compatible t1 t2 =
+let rec est_compatible t1 t2 =
   match t1, t2 with
   | Bool, Bool -> true
   | Int, Int -> true
   | Rat, Rat -> true 
+  | Ptr(type1), Ptr(type2) -> (est_compatible type1 type2)
   | _ -> false 
 
 let%test _ = est_compatible Bool Bool
@@ -31,6 +32,11 @@ let%test _ = not (est_compatible Bool Undefined)
 let%test _ = not (est_compatible Undefined Int)
 let%test _ = not (est_compatible Undefined Rat)
 let%test _ = not (est_compatible Undefined Bool)
+let%test _ = est_compatible (Ptr Int) (Ptr Int)
+let%test _ = not (est_compatible (Ptr Int) (Ptr Bool))
+let%test _ = not (est_compatible (Ptr Rat) (Ptr Int))
+let%test _ = est_compatible (Ptr (Ptr Bool)) (Ptr (Ptr Bool))
+let%test _ = not (est_compatible (Ptr (Ptr Bool)) (Ptr (Ptr Int)))
 
 let est_compatible_list lt1 lt2 =
   try

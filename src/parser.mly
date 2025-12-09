@@ -36,6 +36,9 @@ open Ast.AstSyntax
 %token MULT
 %token INF
 %token EOF
+%token NULL
+%token NEW
+%token PTR
 
 (* Type de l'attribut synthétisé des non-terminaux *)
 %type <programme> prog
@@ -44,7 +47,7 @@ open Ast.AstSyntax
 %type <instruction> i
 %type <typ> typ
 %type <typ*string> param
-%type <expression> e 
+%type <expression> e
 %type <affectable> a
 
 (* Type et définition de l'axiome *)
@@ -62,8 +65,9 @@ param : t=typ n=ID  {(t,n)}
 
 bloc : AO li=i* AF      {li}
 
-
-a : n=ID            {Ident n}
+a :
+| n=ID          {Ident n}
+| MULT a1=a     {Deref a1}
 
 i :
 | t=typ n=ID EQUAL e1=e PV          {Declaration (t,n,e1)}
@@ -76,9 +80,10 @@ i :
 | RETURN exp=e PV                   {Retour (exp)}
 
 typ :
-| BOOL    {Bool}
-| INT     {Int}
-| RAT     {Rat}
+| BOOL          {Bool}
+| INT           {Int}
+| RAT           {Rat}
+| t=typ MULT    {Ptr t}
 
 e : 
 | n=ID PO lp=separated_list(VIRG,e) PF   {AppelFonction (n,lp)}
@@ -95,5 +100,6 @@ e :
 | PO e1=e EQUAL e2=e PF   {Binaire (Equ,e1,e2)}
 | PO e1=e INF e2=e PF     {Binaire (Inf,e1,e2)}
 | PO exp=e PF             {exp}
-
-
+| NULL                    {Null}
+| NEW t=typ               {New t}
+| PTR e1=e                {Adresse e1}
