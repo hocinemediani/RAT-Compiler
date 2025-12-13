@@ -1,28 +1,47 @@
-(* Module de la passe de gestion des identifiants *)
-(* doit être conforme à l'interface Passe *)
+(* Module de la passe de typage, *)
+(* doit etre conforme a l'interface Passe. *)
 open Tds
 open Exceptions
 open Ast
 open Type
 
+(* Type d'entree de la passe. *)
 type t1 = Ast.AstTds.programme
+(* Type de sortie de la passe. *)
 type t2 = Ast.AstType.programme
 
+
+(**************************************************************************************)
+(* recuperer_type : info_ast -> typ                                                   *)
+(* Parametre info : l'info dont on souhaite le type.                                  *)
+(* Verifie que l'info est celle d'une variable ou d'une fonction et retourne          *)
+(* le type ou le type de retour de cette derniere.                                    *)
+(**************************************************************************************)
 let recuperer_type info =
   match info_ast_to_info info with
   | InfoVar(_, t, _, _) -> t
-  | InfoFun(_, t, _) -> t
+  | InfoFun(_, t, _)    -> t
   | _ -> failwith "Erreur interne"
 
+
+(**************************************************************************************)
+(* analyse_type_affectable : AstTds.affectable -> (AstType.affectable, typ)           *)
+(* Parametre a : l'affectable a analyser.                                             *)
+(* Verifie que l'affectable est bien utilise et renvoie un affectable de type         *)
+(* AstType.affectable, avec son type.                                                 *)
+(**************************************************************************************)
 let rec analyse_type_affectable a =
   match a with
   | AstTds.Ident info -> (AstType.Ident info, recuperer_type info)
+  | _                 -> failwith "Erreur interne"
 
-(* analyse_type_expression : type -> AstTds.expression -> Asttype.expression *)
-(* Paramètre e : l'expression à analyser *)
-(* Vérifie la bonne utilisation des identifiants et tranforme l'expression
-en une expression de type Asttype.expression *)
-(* Erreur si mauvaise utilisation des identifiants *)
+(**************************************************************************************)
+(* analyse_tds_expression : tds -> AstSyntax.expression -> AstTds.expression          *)
+(* Parametre tds : la table des symboles courante.                                    *)
+(* Parametre e : l'expression a analyser.                                             *)
+(* Verifie le bon typage des expressions et tranforme l'expression en une expression  *)
+(* de type AstTds.expression.                                                         *)
+(**************************************************************************************)
 let rec analyse_type_expression e =
   match e with
   | AstTds.AppelFonction (info, el) -> 
@@ -39,9 +58,9 @@ let rec analyse_type_expression e =
   | AstTds.Affectable a ->
     let (na, ta) = analyse_type_affectable a in
     (AstType.Affectable na, ta)
-    (*
+(*
   | AstTds.Ident info -> (AstType.Ident info, recuperer_type info)
-  *)
+*)
   | AstTds.Booleen b -> (AstType.Booleen b, Bool)
   | AstTds.Entier i -> (AstType.Entier i, Int)
   | AstTds.Unaire (u, e2) ->
@@ -70,10 +89,10 @@ let rec analyse_type_expression e =
 
 
 (* analyse_type_instruction : type -> info_ast option -> AstTds.instruction -> Asttype.instruction *)
-(* Paramètre oia : None si l'instruction i est dans le bloc principal,
-                   Some ia où ia est l'information associée à la fonction dans laquelle est l'instruction i sinon *)
-(* Paramètre i : l'instruction à analyser *)
-(* Vérifie la bonne utilisation des identifiants et tranforme l'instruction
+(* Parametre oia : None si l'instruction i est dans le bloc principal,
+                   Some ia ou ia est l'information associee a la fonction dans laquelle est l'instruction i sinon *)
+(* Parametre i : l'instruction a analyser *)
+(* Verifie la bonne utilisation des identifiants et tranforme l'instruction
 en une instruction de type Asttype.instruction *)
 (* Erreur si mauvaise utilisation des identifiants *)
 let rec analyse_type_instruction i =
@@ -133,18 +152,18 @@ let rec analyse_type_instruction i =
 
 
 (* analyse_type_bloc : type -> info_ast option -> AstTds.bloc -> Asttype.bloc *)
-(* Paramètre oia : None si le bloc li est dans le programme principal,
-                   Some ia où ia est l'information associée à la fonction dans laquelle est le bloc li sinon *)
-(* Paramètre li : liste d'instructions à analyser *)
-(* Vérifie la bonne utilisation des identifiants et tranforme le bloc en un bloc de type Asttype.bloc *)
+(* Parametre oia : None si le bloc li est dans le programme principal,
+                   Some ia ou ia est l'information associee a la fonction dans laquelle est le bloc li sinon *)
+(* Parametre li : liste d'instructions a analyser *)
+(* Verifie la bonne utilisation des identifiants et tranforme le bloc en un bloc de type Asttype.bloc *)
 (* Erreur si mauvaise utilisation des identifiants *)
 and analyse_type_bloc li =
   List.map analyse_type_instruction li
 
 
 (* analyse_type_fonction : type -> AstTds.fonction -> Asttype.fonction *)
-(* Paramètre : la fonction à analyser *)
-(* Vérifie la bonne utilisation des identifiants et tranforme la fonction
+(* Parametre : la fonction a analyser *)
+(* Verifie la bonne utilisation des identifiants et tranforme la fonction
 en une fonction de type Asttype.fonction *)
 (* Erreur si mauvaise utilisation des identifiants *)
 let analyse_type_fonction (AstTds.Fonction(_, info, lp, li)) =
@@ -154,8 +173,8 @@ let analyse_type_fonction (AstTds.Fonction(_, info, lp, li)) =
   
 
 (* analyser : AstTds.programme -> AstType.programme *)
-(* Paramètre : le programme à analyser *)
-(* Vérifie la bonne utilisation des identifiants et tranforme le programme
+(* Parametre : le programme a analyser *)
+(* Verifie la bonne utilisation des identifiants et tranforme le programme
 en un programme de type Asttype.programme *)
 (* Erreur si mauvaise utilisation des identifiants *)
 let analyser (AstTds.Programme (fonctions,prog)) =

@@ -1,5 +1,5 @@
 (* Module de la passe de gestion des identifiants, *)
-(* doit être conforme a l'interface Passe. *)
+(* doit etre conforme a l'interface Passe. *)
 open Tds
 open Exceptions
 open Ast
