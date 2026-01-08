@@ -1,5 +1,5 @@
 (* Module de la passe de generation de code TAM *)
-(* doit être conforme à l'interface Passe *)
+(* doit etre conforme a l'interface Passe *)
 open Tds
 open Ast
 open Type
@@ -13,8 +13,8 @@ type t2 = string
 
 (**************************************************************************************)
 (* analyse_code_affectable_lecture : AstPlacement.affectable -> string                *)
-(* Parametre a : l'affectable à analyser en lecture.                                  *)
-(* Génère le code TAM pour charger la valeur d'un affectable (variable ou pointeur)   *)
+(* Parametre a : l'affectable a analyser en lecture.                                  *)
+(* Genere le code TAM pour charger la valeur d'un affectable (variable ou pointeur)   *)
 (* au sommet de la pile.                                                              *)
 (* Erreur si l'affectable n'est pas une variable accessible.                          *)
 (**************************************************************************************)
@@ -30,8 +30,8 @@ let rec analyse_code_affectable_lecture a =
 
 (**************************************************************************************)
 (* analyse_code_affectable_ecriture : AstPlacement.affectable -> string               *)
-(* Parametre a : l'affectable à analyser en écriture.                                 *)
-(* Génère le code TAM pour stocker la valeur au sommet de la pile vers l'adresse      *)
+(* Parametre a : l'affectable a analyser en ecriture.                                 *)
+(* Genere le code TAM pour stocker la valeur au sommet de la pile vers l'adresse      *)
 (* de l'affectable.                                                                   *)
 (* Erreur si l'affectable n'est pas une variable accessible.                          *)
 (**************************************************************************************)
@@ -47,9 +47,9 @@ let rec analyse_code_affectable_ecriture a =
 
 (**************************************************************************************)
 (* analyse_code_expression : AstPlacement.expression -> string                        *)
-(* Parametre e : l'expression à analyser.                                             *)
-(* Génère le code TAM correspondant à l'évaluation de l'expression. Le résultat       *)
-(* sera placé au sommet de la pile.                                                   *)
+(* Parametre e : l'expression a analyser.                                             *)
+(* Genere le code TAM correspondant a l'evaluation de l'expression. Le resultat       *)
+(* sera place au sommet de la pile.                                                   *)
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
 let rec analyse_code_expression e =
@@ -86,9 +86,9 @@ let rec analyse_code_expression e =
 
 (**************************************************************************************)
 (* analyse_code_instruction : AstPlacement.instruction -> string                      *)
-(* Parametre i : l'instruction à analyser.                                            *)
-(* Génère le code TAM correspondant à l'exécution de l'instruction (gestion de pile,  *)
-(* sauts, étiquettes, appels systèmes).                                               *)
+(* Parametre i : l'instruction a analyser.                                            *)
+(* Genere le code TAM correspondant a l'execution de l'instruction (gestion de pile,  *)
+(* sauts, etiquettes, appels systemes).                                               *)
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
 let rec analyse_code_instruction i =
@@ -120,9 +120,9 @@ let rec analyse_code_instruction i =
 
 (**************************************************************************************)
 (* analyse_code_bloc : AstPlacement.bloc -> string                                    *)
-(* Parametre li : liste d'instructions à analyser avec la taille totale des locales.  *)
-(* Génère le code pour toutes les instructions du bloc et nettoie la pile (pop)       *)
-(* des variables locales à la fin.                                                    *)
+(* Parametre li : liste d'instructions a analyser avec la taille totale des locales.  *)
+(* Genere le code pour toutes les instructions du bloc et nettoie la pile (pop)       *)
+(* des variables locales a la fin.                                                    *)
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
 and analyse_code_bloc (li, taille) =
@@ -131,8 +131,8 @@ and analyse_code_bloc (li, taille) =
 
 (**************************************************************************************)
 (* analyse_code_fonction : AstPlacement.fonction -> string                            *)
-(* Parametre : la fonction à analyser.                                                *)
-(* Génère l'étiquette de la fonction, le code de son corps, et l'instruction de fin.  *)
+(* Parametre : la fonction a analyser.                                                *)
+(* Genere l'etiquette de la fonction, le code de son corps, et l'instruction de fin.  *)
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
 let analyse_code_fonction (AstPlacement.Fonction(info, _, bloc)) =
@@ -143,8 +143,8 @@ let analyse_code_fonction (AstPlacement.Fonction(info, _, bloc)) =
 
 (**************************************************************************************)
 (* analyser : AstPlacement.programme -> string                                        *)
-(* Parametre : le programme à analyser.                                               *)
-(* Génère l'entête TAM, le code des fonctions, le code du main, et termine par halt.  *)
+(* Parametre : le programme a analyser.                                               *)
+(* Genere l'entete TAM, le code des fonctions, le code du main, et termine par halt.  *)
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
 let analyser (AstPlacement.Programme (fonctions, prog)) =
