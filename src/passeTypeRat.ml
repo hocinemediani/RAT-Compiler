@@ -65,27 +65,29 @@ let rec analyse_type_expression e =
   | AstTds.Entier i -> (AstType.Entier i, Int)
   | AstTds.Unaire (u, e2) ->
     let (n, t) = analyse_type_expression e2 in
-    if (est_compatible t Rat)
-    then
-      begin
-        match u with
-        | AstSyntax.Numerateur -> (AstType.Unaire (AstType.Numerateur, n), Int)
-        | AstSyntax.Denominateur -> (AstType.Unaire (AstType.Denominateur, n), Int)
-      end
-    else raise (TypeInattendu (t, Rat))
+      if (est_compatible t Rat)
+      then
+        begin
+          match u with
+          | AstSyntax.Numerateur -> (AstType.Unaire (AstType.Numerateur, n), Int)
+          | AstSyntax.Denominateur -> (AstType.Unaire (AstType.Denominateur, n), Int)
+        end
+      else raise (TypeInattendu (t, Rat))
   | AstTds.Binaire (op, e2, e3) ->
-    let (ne2, te2) = analyse_type_expression e2 in
-    let (ne3, te3) = analyse_type_expression e3 in
-    match (op, te2, te3) with
-    | (Plus, Int, Int) -> (AstType.Binaire (PlusInt, ne2, ne3), Int)
-    | (Plus, Rat, Rat) -> (AstType.Binaire (PlusRat, ne2, ne3), Rat)
-    | (Mult, Int, Int) -> (AstType.Binaire (MultInt, ne2, ne3), Int)
-    | (Mult, Rat, Rat) -> (AstType.Binaire (MultRat, ne2, ne3), Rat)
-    | (Equ, Int, Int) -> (AstType.Binaire (EquInt, ne2, ne3), Bool)
-    | (Equ, Bool, Bool) -> (AstType.Binaire (EquBool, ne2, ne3), Bool)
-    | (Inf, Int, Int) -> (AstType.Binaire (Inf, ne2, ne3), Bool)
-    | (Fraction, Int, Int) -> (AstType.Binaire (Fraction, ne2, ne3), Rat)
-    | _ -> raise (TypeBinaireInattendu (op, te2, te3))
+    begin
+      let (ne2, te2) = analyse_type_expression e2 in
+        let (ne3, te3) = analyse_type_expression e3 in
+          match (op, te2, te3) with
+          | (Plus, Int, Int) -> (AstType.Binaire (PlusInt, ne2, ne3), Int)
+          | (Plus, Rat, Rat) -> (AstType.Binaire (PlusRat, ne2, ne3), Rat)
+          | (Mult, Int, Int) -> (AstType.Binaire (MultInt, ne2, ne3), Int)
+          | (Mult, Rat, Rat) -> (AstType.Binaire (MultRat, ne2, ne3), Rat)
+          | (Equ, Int, Int) -> (AstType.Binaire (EquInt, ne2, ne3), Bool)
+          | (Equ, Bool, Bool) -> (AstType.Binaire (EquBool, ne2, ne3), Bool)
+          | (Inf, Int, Int) -> (AstType.Binaire (Inf, ne2, ne3), Bool)
+          | (Fraction, Int, Int) -> (AstType.Binaire (Fraction, ne2, ne3), Rat)
+          | _ -> raise (TypeBinaireInattendu (op, te2, te3))
+    end
 
 
 (* analyse_type_instruction : type -> info_ast option -> AstTds.instruction -> Asttype.instruction *)
