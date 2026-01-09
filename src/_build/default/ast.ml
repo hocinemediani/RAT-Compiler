@@ -23,7 +23,9 @@ type unaire = Numerateur | Denominateur
 type binaire = Fraction | Plus | Mult | Equ | Inf
 
 type affectable =
+  (* Une variable est représentée par son nom. *)
   | Ident of string
+  (* Dereferencement d'un pointeur vers une variable. *)
   | Deref of affectable
 
 (* Expressions de Rat *)
@@ -40,8 +42,11 @@ type expression =
   | Unaire of unaire * expression
   (* Opération binaire représentée par l'opérateur, l'opérande gauche et l'opérande droite *)
   | Binaire of binaire * expression * expression
+  (* Pointeur nul. *)
   | Null
+  (* Initialisation d'un pointeur de type typ. *)
   | New of typ
+  (* Accès à l'adresse d'une variable. *)
   | Adresse of string
 
 
@@ -62,6 +67,8 @@ and instruction =
   | TantQue of expression * bloc
   (* return d'une fonction *)
   | Retour of expression
+  (* Appel de procedure représenté par le nom de la procédure et la liste des paramètres réels *)
+  | AppelProcedure of string * expression list
 
 (* Structure des fonctions de Rat *)
 (* type de retour - nom - liste des paramètres (association type et nom) - corps de la fonction *)
@@ -111,6 +118,7 @@ struct
     | TantQue of expression * bloc
     | Retour of expression * Tds.info_ast  (* les informations sur la fonction à laquelle est associé le retour *)
     | Empty (* les nœuds ayant disparus: Const *)
+    | AppelProcedure of Tds.info_ast * expression list
 
 
   (* Structure des fonctions dans notre langage *)
@@ -166,6 +174,7 @@ type bloc = instruction list
   | TantQue of expression * bloc
   | Retour of expression * Tds.info_ast
   | Empty (* les nœuds ayant disparus: Const *)
+  | AppelProcedure of Tds.info_ast * expression list
 
 (* informations associées à l'identificateur (dont son nom), liste des paramètres, corps *)
 type fonction = Fonction of Tds.info_ast * Tds.info_ast list * bloc
@@ -199,6 +208,7 @@ type bloc = instruction list * int (* taille du bloc *)
  | TantQue of expression * bloc
  | Retour of expression * int * int (* taille du retour et taille des paramètres *)
  | Empty (* les nœuds ayant disparus: Const *)
+ | AppelProcedure of Tds.info_ast * expression list
 
 (* informations associées à l'identificateur (dont son nom), liste de paramètres, corps, expression de retour *)
 (* Plus besoin de la liste des paramètres mais on la garde pour les tests du placements mémoire *)

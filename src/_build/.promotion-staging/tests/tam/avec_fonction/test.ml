@@ -35,34 +35,36 @@ let pathFichiersRat = "../../../../../tests/tam/avec_fonction/fichiersRat/"
 (* requires ppx_expect in jbuild, and `opam install ppx_expect` *)
 let%expect_test "testfun1" =
   runtam (pathFichiersRat^"testfun1.rat");
-  [%expect{| Syntaxic error: asm.SyntaxicError: Error : Syntax error |}]
+  [%expect{| 1 |}]
 
 let%expect_test "testfun2" =
   runtam (pathFichiersRat^"testfun2.rat");
-  [%expect{| Syntaxic error: asm.SyntaxicError: Error : Syntax error |}]
+  [%expect{| 7 |}]
 
 let%expect_test "testfun3" =
   runtam (pathFichiersRat^"testfun3.rat");
-  [%expect{| Syntaxic error: asm.SyntaxicError: Error : Syntax error |}]
+  [%expect{| 10 |}]
 
 let%expect_test "testfun4" =
   runtam (pathFichiersRat^"testfun4.rat");
-  [%expect{| Syntaxic error: asm.SyntaxicError: Error : Syntax error |}]
+  [%expect{| 10 |}]
 
 let%expect_test "testfun5" =
   runtam (pathFichiersRat^"testfun5.rat");
-  [%expect{| Syntaxic error: asm.SyntaxicError: Error : Syntax error |}]
+  [%expect{| |}]
 
 let%expect_test "testfun6" =
   runtam (pathFichiersRat^"testfun6.rat");
-  [%expect{| Syntaxic error: asm.SyntaxicError: Error : Syntax error |}]
+  [%expect{|truetrue|}]
 
 let%expect_test "testfuns" =
   runtam (pathFichiersRat^"testfuns.rat");
-  [%expect{| Syntaxic error: asm.SyntaxicError: Error : Syntax error |}]
+  [%expect{| 28 |}]
 
 let%expect_test "factrec" =
   runtam (pathFichiersRat^"factrec.rat");
-  [%expect{| Syntaxic error: asm.SyntaxicError: Error : Syntax error |}]
+  [%expect{| 120 |}]
 
-
+let%expect_test "procedure" =
+  runtam (pathFichiersRat^"testProcedure1.rat");
+  [%expect{| [1/2][3/4][5/4] |}]

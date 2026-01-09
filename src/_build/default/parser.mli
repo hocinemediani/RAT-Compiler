@@ -3,6 +3,7 @@
 
 type token = 
   | WHILE
+  | VOID
   | VIRG
   | TRUE
   | SLASH

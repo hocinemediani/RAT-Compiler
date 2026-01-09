@@ -1,4 +1,4 @@
-# dune runtest --force ./tests/placement/
+# dune runtest --force
 # OCAMLPARAM: unset
 # Shared cache: enabled-except-user-rules
 # Shared cache location: /Users/benjaminkrief/.cache/dune/db
@@ -14,6 +14,14 @@
 #  ; build_dir = In_build_dir "default"
 #  ; instrument_with = []
 #  }
-$ /Users/benjaminkrief/.opam/5.1.1/bin/ocamlc.opt -config > /var/folders/lk/l_0rhmm97s96y2hp21k8sjtm0000gn/T/dune_44d8b6_output
+$ /Users/benjaminkrief/.opam/5.1.1/bin/ocamlc.opt -config > /var/folders/lk/l_0rhmm97s96y2hp21k8sjtm0000gn/T/dune_228fe1_output
+$ (cd _build/default && .rat.inline-tests/inline-test-runner.exe inline-test-runner rat -partition tds.ml -source-tree-root . -diff-cmd -)
+$ (cd _build/default && .rat.inline-tests/inline-test-runner.exe inline-test-runner rat -partition type.ml -source-tree-root . -diff-cmd -)
+$ (cd _build/default/tests/gestion_id/avec_fonction && .avec_fonction_id.inline-tests/inline-test-runner.exe inline-test-runner avec_fonction_id -partition test.ml -source-tree-root ../../.. -diff-cmd -)
 $ (cd _build/default/tests/placement/avec_fonction && .avec_fonction_placement.inline-tests/inline-test-runner.exe inline-test-runner avec_fonction_placement -partition test.ml -source-tree-root ../../.. -diff-cmd -)
+$ (cd _build/default/tests/gestion_id/sans_fonction && .sans_fonction_id.inline-tests/inline-test-runner.exe inline-test-runner sans_fonction_id -partition test.ml -source-tree-root ../../.. -diff-cmd -)
 $ (cd _build/default/tests/placement/sans_fonction && .sans_fonction_placement.inline-tests/inline-test-runner.exe inline-test-runner sans_fonction_placement -partition test.ml -source-tree-root ../../.. -diff-cmd -)
+$ (cd _build/default/tests/type/avec_fonction && .avec_fonction_type.inline-tests/inline-test-runner.exe inline-test-runner avec_fonction_type -partition test.ml -source-tree-root ../../.. -diff-cmd -)
+$ (cd _build/default/tests/type/sans_fonction && .sans_fonction_type.inline-tests/inline-test-runner.exe inline-test-runner sans_fonction_type -partition test.ml -source-tree-root ../../.. -diff-cmd -)
+$ (cd _build/default/tests/tam/avec_fonction && .avec_fonction_tam.inline-tests/inline-test-runner.exe inline-test-runner avec_fonction_tam -partition test.ml -source-tree-root ../../.. -diff-cmd -)
+$ (cd _build/default/tests/tam/sans_fonction && .sans_fonction_tam.inline-tests/inline-test-runner.exe inline-test-runner sans_fonction_tam -partition test.ml -source-tree-root ../../.. -diff-cmd -)

@@ -89,3 +89,6 @@ let%expect_test "complique" =
   runtam (pathFichiersRat^"complique.rat");
   [%expect{| [9/4][27/14][27/16][3/2] |}]
 
+let%expect_test "pointeur1" =
+  runtam (pathFichiersRat^"testPointeur1.rat");
+  [%expect{| 423 |}]

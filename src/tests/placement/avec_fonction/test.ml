@@ -77,6 +77,15 @@ let%test "test8_z1" =
    test (pathFichiersRat^"test8.rat" ) "main" ("z1",1)  (7, "SB")
 || test (pathFichiersRat^"test8.rat" ) "main" ("z1",1)  (7, "LB")
 
+let%test "test13_x" = 
+   test (pathFichiersRat^"test13.rat" ) "main" ("x",1)  (0, "SB")
+
+let%test "test13_y" = 
+   test (pathFichiersRat^"test13.rat" ) "main" ("y",1)  (1, "SB")
+
+let%test "test13_z" = 
+   test (pathFichiersRat^"test13.rat" ) "main" ("z",1)  (2, "SB")
+
 let%test "test8_f_x_1" = 
   test (pathFichiersRat^"test8.rat")  "f" ("x",1)  (3, "LB")
     
@@ -125,14 +134,23 @@ let%test "test12_f_r" =
 let%test "test12_f_i" = 
   test (pathFichiersRat^"test12.rat")  "f" ("i",1)  (-1, "LB")
 
+let%test "test13_f_a" = 
+  test (pathFichiersRat^"test13.rat")  "f" ("a",1)  (-4, "LB")
+
+let%test "test13_f_b" = 
+  test (pathFichiersRat^"test13.rat")  "f" ("b",1)  (-3, "LB")
+
+let%test "test13_f_c" = 
+  test (pathFichiersRat^"test13.rat")  "f" ("c",1)  (-2, "LB")
+
 let%test "testProcedure_x" = 
-  test (pathFichiersRat^"testProcedure1.rat")  "test" ("x",2)  (0, "SB")
+  test (pathFichiersRat^"testProcedure1.rat")  "main" ("x",1)  (0, "SB")
   
 let%test "testProcedure_y" = 
-  test (pathFichiersRat^"testProcedure1.rat")  "test" ("y",2)  (2, "SB")
+  test (pathFichiersRat^"testProcedure1.rat")  "main" ("y",1)  (2, "SB")
 
-let%test "testProcedure_a" = 
-  test (pathFichiersRat^"testProcedure1.rat")  "printRAdd" ("a",2)  (-4, "LB")
+let%test "testProcedure_f_a" = 
+  test (pathFichiersRat^"testProcedure1.rat")  "f" ("a",1)  (-4, "LB")
 
-let%test "testProcedure_b" = 
-  test (pathFichiersRat^"testProcedure1.rat")  "printRAdd" ("b",2)  (-2, "LB")
+  let%test "testProcedure_f_b" = 
+  test (pathFichiersRat^"testProcedure1.rat")  "f" ("b",1)  (-2, "LB")

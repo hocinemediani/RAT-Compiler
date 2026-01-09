@@ -30,7 +30,8 @@
         "false",   FALSE;
         "return",  RETURN;
         "null",    NULL;
-        "new",     NEW
+        "new",     NEW;
+        "void",    VOID
       ];
     fun id ->
       match Hashtbl.find_opt kws id with

@@ -172,7 +172,7 @@ let rec analyse_type_instruction i =
           | InfoFun(_, tr, ltp) ->
             (* Verification de la compatibilite des types des parametres et la procedure est bien une procedure. *)
             if ((Type.est_compatible_list ltp lte) && (est_compatible tr Void))
-            then (AstType.AppelProcedure (info, lne), tr)
+            then (AstType.AppelProcedure (info, lne))
             else raise (Exceptions.TypesParametresInattendus (lte, ltp))
           | _ -> failwith "Erreur interne"
     end

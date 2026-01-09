@@ -134,7 +134,6 @@ let rec analyse_tds_expression tds e =
       | Some i  -> AstTds.Adresse (i)
     end
 
-
 (**************************************************************************************)
 (* analyse_tds_instruction : tds -> info_ast option -> AstSyntax.instruction ->       *)
 (*                           AstTds.instruction                                       *)
@@ -239,6 +238,23 @@ let rec analyse_tds_instruction tds oia i =
       (* Analyse de l'expression *)
       let ne = analyse_tds_expression tds e in
       AstTds.Retour (ne,ia)
+    end
+  | AstSyntax.AppelProcedure (s, el) ->
+    begin
+      (* La procedure a t'elle deja ete declaree ? *)
+      match Tds.chercherGlobalement tds s with
+      | None    -> raise (Exceptions.IdentifiantNonDeclare s)
+      | Some i  ->
+        begin
+            match Tds.info_ast_to_info i with
+            (* Si c'est bien une fonction que l'on appel, on continue. *)
+            | Tds.InfoFun (_, _, _) ->
+              (* On analyse chaque expression dans l'appel de la fonction. *)
+              let ael = List.map (analyse_tds_expression tds) el in
+              AstTds.AppelProcedure (i, ael)
+            (* On essaie d'appeler quelque chose d'autre qu'une fonction. *)
+            | _ -> raise (Exceptions.MauvaiseUtilisationIdentifiant s)
+        end
     end
 
 

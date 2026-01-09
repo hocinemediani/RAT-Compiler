@@ -68,6 +68,6 @@ let getTaille t =
 let%test _ = getTaille Int = 1
 let%test _ = getTaille Bool = 1
 let%test _ = getTaille Rat = 2
-let%test _ = getTaille Ptr Rat = 1
-let%test _ = getTaille Ptr Int = 1
+let%test _ = getTaille (Ptr (Rat)) = 1
+let%test _ = getTaille (Ptr (Int)) = 1
 let%test _ = getTaille Void = 0
