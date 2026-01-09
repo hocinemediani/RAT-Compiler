@@ -70,16 +70,16 @@ a :
 | MULT a1=a     {Deref a1}
 
 i :
-| t=typ n=ID EQUAL e1=e PV                      {Declaration (t,n,e1)}
-(* | n=ID EQUAL e1=e PV                            {Affectation (n,e1)} *)
-| a1=a EQUAL e1=e PV                            {Affectation (a1,e1)}
-| CONST n=ID EQUAL e=ENTIER PV                  {Constante (n,e)}
-| PRINT e1=e PV                                 {Affichage (e1)}
-| IF exp=e li1=bloc ELSE li2=bloc               {Conditionnelle (exp,li1,li2)}
-| WHILE exp=e li=bloc                           {TantQue (exp,li)}
-| RETURN exp=e PV                               {Retour (exp)}
-| RETURN PV                                     {Retour Null}
-| n=ID PO lp=separated_list(VIRG,param) PF PV   {AppelProcedure (n, lp)}
+| t=typ n=ID EQUAL e1=e PV                  {Declaration (t,n,e1)}
+(* | n=ID EQUAL e1=e PV                        {Affectation (n,e1)} *)
+| a1=a EQUAL e1=e PV                        {Affectation (a1,e1)}
+| CONST n=ID EQUAL e=ENTIER PV              {Constante (n,e)}
+| PRINT e1=e PV                             {Affichage (e1)}
+| IF exp=e li1=bloc ELSE li2=bloc           {Conditionnelle (exp,li1,li2)}
+| WHILE exp=e li=bloc                       {TantQue (exp,li)}
+| RETURN exp=e PV                           {Retour (exp)}
+| RETURN PV                                 {Retour Null}
+| n=ID PO lp=separated_list(VIRG,e) PF PV   {AppelProcedure (n, lp)}
 
 typ :
 | BOOL          {Bool}

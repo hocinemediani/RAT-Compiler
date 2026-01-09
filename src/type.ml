@@ -16,6 +16,8 @@ let rec est_compatible t1 t2 =
   | Rat, Rat -> true 
   | Ptr(type1), Ptr(type2) -> (est_compatible type1 type2)
   | type1, Ptr(type2) -> (est_compatible type1 type2)
+  | Ptr Undefined, Ptr _ -> true
+  | Ptr _, Ptr Undefined -> true
   | Void, Void -> true
   | _ -> false 
 

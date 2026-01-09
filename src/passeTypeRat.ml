@@ -101,7 +101,8 @@ let rec analyse_type_expression e =
           | (Fraction, Int, Int) -> (AstType.Binaire (Fraction, ne2, ne3), Rat)
           | _ -> raise (TypeBinaireInattendu (op, te2, te3))
     end
-  | AstTds.Null -> (AstType.Null, Null)
+  (* Null n'etant pas un type, la convention de representation sera un pointeur undefined *)
+  | AstTds.Null -> (AstType.Null, Ptr Undefined)
   | AstTds.New t -> 
     begin
       match t with
@@ -159,7 +160,7 @@ let rec analyse_type_instruction i =
   | AstTds.Retour (e, ia) ->
     let (ne, te) = analyse_type_expression e in
       let t = recuperer_type ia in
-        if (est_compatible t te)
+        if ((est_compatible t te) || (t = Void && te = Ptr Undefined))
         then AstType.Retour (ne, ia)
         else raise (TypeInattendu (te, t))
   | AstTds.Empty -> AstType.Empty

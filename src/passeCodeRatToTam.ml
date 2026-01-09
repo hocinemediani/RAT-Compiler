@@ -25,7 +25,7 @@ let rec get_type_affectable a =
   | AstType.Ident info ->
     begin
       match info_ast_to_info info with
-      | InfoVar (_,t, _, _) -> t1
+      | InfoVar (_,t, _, _) -> t
       | _ -> failwith "Erreur interne"
     end
   | AstType.Deref x ->
@@ -157,7 +157,7 @@ let rec analyse_code_instruction i =
       (label tantque) ^ (analyse_code_expression c) ^ (jumpif 0 (label fintantque)) ^ (analyse_code_bloc b) ^ (jump (label tantque)) ^ (label fintantque)
   | AstPlacement.Retour (e, tailleRet, tailleParam) -> (analyse_code_expression e) ^ (return tailleRet tailleParam)
   | AstPlacement.Empty -> ""
-  | AstType.AppelProcedure (info, le) ->
+  | AstPlacement.AppelProcedure (info, le) ->
     begin
       match info_ast_to_info info with
       | InfoFun(s, _, _) ->

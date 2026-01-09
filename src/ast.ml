@@ -208,6 +208,7 @@ type bloc = instruction list * int (* taille du bloc *)
  | TantQue of expression * bloc
  | Retour of expression * int * int (* taille du retour et taille des paramètres *)
  | Empty (* les nœuds ayant disparus: Const *)
+ | AppelProcedure of Tds.info_ast * expression list
 
 (* informations associées à l'identificateur (dont son nom), liste de paramètres, corps, expression de retour *)
 (* Plus besoin de la liste des paramètres mais on la garde pour les tests du placements mémoire *)
