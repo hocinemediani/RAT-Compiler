@@ -1,4 +1,4 @@
-(* Fonctions de service pour générer des instructions TAM. *)
+  (* Fonctions de service pour générer des instructions TAM. *)
 
 (* LOAD (int) int[reg] *)
 (* val load : int -> int -> string -> string *)

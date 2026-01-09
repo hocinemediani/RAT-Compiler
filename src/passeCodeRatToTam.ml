@@ -12,6 +12,29 @@ type t2 = string
 
 
 (**************************************************************************************)
+(* get_type_affectable : AstPlacement.affectable -> Type.typ                          *)
+(* Parametre a : l'affectable dont on cherche le type.                                *)
+(* Fonction auxiliaire qui parcourt l'affectable (y compris les dereferencements)     *)
+(* pour retrouver le type de la valeur ciblee. Necessaire pour determiner la taille   *)
+(* a lire ou ecrire (via getTaille) lors de l'acces a un pointeur.                    *)
+(* Erreur si l'affectable n'est pas correctement type (ex: dereferencement d'un       *)
+(* non-pointeur), bien que cela devrait etre detecte par la passe de typage.          *)
+(**************************************************************************************)
+let rec get_type_affectable a =
+  match a with
+  | AstType.Ident info ->
+    begin
+      match info_ast_to_info info with
+      | InfoVar (_,t, _, _) -> t1
+      | _ -> failwith "Erreur interne"
+    end
+  | AstType.Deref x ->
+    match get_type_affectable x with
+    | Ptr typ_ptr -> typ_ptr
+    | _ -> failwith "Erreur interne"
+
+
+(**************************************************************************************)
 (* analyse_code_affectable_lecture : AstPlacement.affectable -> string                *)
 (* Parametre a : l'affectable a analyser en lecture.                                  *)
 (* Genere le code TAM pour charger la valeur d'un affectable (variable ou pointeur)   *)
@@ -26,6 +49,9 @@ let rec analyse_code_affectable_lecture a =
       | InfoVar(_, t, depl, reg) -> (load (getTaille t) depl reg)
       | _ -> failwith "Erreur interne"
     end
+  | AstType.Deref x ->
+    let t = get_type_affectable x in
+      (analyse_code_affectable_lecture x) ^ (loadi (getTaille t))
 
 
 (**************************************************************************************)
@@ -43,6 +69,9 @@ let rec analyse_code_affectable_ecriture a =
       | InfoVar(_, t, depl, reg) -> (store (getTaille t) depl reg)
       | _ -> failwith "Erreur interne"
     end
+  | AstType.Deref x ->
+    let t = get_type_affectable x in
+      (analyse_code_affectable_ecriture x) ^ (storei (getTaille t))
 
 
 (**************************************************************************************)
@@ -64,7 +93,8 @@ let rec analyse_code_expression e =
     end
   | AstType.Affectable a -> analyse_code_affectable_lecture a
   | AstType.Booleen b -> 
-    if b then (loadl_int 1)
+    if b
+    then (loadl_int 1)
     else (loadl_int 0)
   | AstType.Entier i -> (loadl_int i)
   | AstType.Unaire (u, e2) -> (analyse_code_expression e2) ^ (if u = Numerateur then (pop 0 1) else (pop 1 1))
@@ -81,6 +111,17 @@ let rec analyse_code_expression e =
         | Inf -> subr (label "ILss")
         | Fraction -> ""
       )
+    end
+  (* Arbitrairement, Null est 0. *)
+  | AstType.Null -> loadl_int 0
+  (* On alloue un emplacement memoire de taille getTaille t. *)
+  | AstType.New t -> (loadl_int (getTaille t)) ^ (subr "MAlloc")
+  | AstType.Adresse info ->
+    begin
+      match info_ast_to_info info with
+      (* On se place a l'adresse memoire de la variable. *)
+      | InfoVar (_, _, depl, reg) -> (loada depl reg)
+      | _ -> failwith "Erreur interne"
     end
 
 
