@@ -162,8 +162,19 @@ let rec analyse_type_instruction i =
         if (est_compatible t te)
         then AstType.Retour (ne, ia)
         else raise (TypeInattendu (te, t))
-  | AstTds.Empty ->
-    AstType.Empty
+  | AstTds.Empty -> AstType.Empty
+  | AstTds.AppelProcedure (info, el) -> 
+    begin
+      let l = List.map analyse_type_expression el in
+        let (lne, lte) = List.split l in
+          match info_ast_to_info info with
+          | InfoFun(_, tr, ltp) ->
+            (* Verification de la compatibilite des types des parametres et la procedure est bien une procedure. *)
+            if ((Type.est_compatible_list ltp lte) && (est_compatible tr Void))
+            then (AstType.AppelProcedure (info, lne), tr)
+            else raise (Exceptions.TypesParametresInattendus (lte, ltp))
+          | _ -> failwith "Erreur interne"
+    end
 
 
 (**************************************************************************************)

@@ -38,8 +38,8 @@ let rec analyse_placement_instruction i depl reg =
   | AstType.Conditionnelle (c, t, e) ->
     (* Analyse des blocs sans modifier le deplacement courant pour la suite du programme *)
     let nt = analyse_placement_bloc t depl reg in
-    let ne = analyse_placement_bloc e depl reg in
-    (AstPlacement.Conditionnelle (c, nt, ne), 0)
+      let ne = analyse_placement_bloc e depl reg in
+      (AstPlacement.Conditionnelle (c, nt, ne), 0)
   | AstType.TantQue (c, b) ->
     let nb = analyse_placement_bloc b depl reg in
     (AstPlacement.TantQue (c, nb), 0)
@@ -69,9 +69,9 @@ and analyse_placement_bloc li depl reg =
   | t::q -> 
       (* Analyse de l'instruction courante *)
       let (nt, tt) = analyse_placement_instruction t depl reg in
-      (* Analyse de la suite avec le deplacement mis a jour *)
-      let (nq, tq) = analyse_placement_bloc q (depl + tt) reg in
-      (nt::nq, tt + tq)
+        (* Analyse de la suite avec le deplacement mis a jour *)
+        let (nq, tq) = analyse_placement_bloc q (depl + tt) reg in
+        (nt::nq, tt + tq)
 
 
 (**************************************************************************************)
@@ -95,12 +95,12 @@ let analyse_placement_fonction (AstType.Fonction(info, lp, li)) =
           placement_variables q (depl - getTaille t)
         | _ -> failwith "Erreur interne"
       end
-    in 
-  (* Placement des parametres *)
-  let _ = placement_variables (List.rev lp) 0 in
-  (* Placement du corps de la fonction : les locales commencent a LB + 3 (apres le chainage statique, etc) *)
-  let nli = analyse_placement_bloc li 3 "LB" in
-  AstPlacement.Fonction(info, lp, nli)
+  in 
+    (* Placement des parametres *)
+    let _ = placement_variables (List.rev lp) 0 in
+      (* Placement du corps de la fonction : les locales commencent a LB + 3 (apres le chainage statique, etc) *)
+      let nli = analyse_placement_bloc li 3 "LB" in
+      AstPlacement.Fonction(info, lp, nli)
   
 
 (**************************************************************************************)
@@ -112,5 +112,5 @@ let analyse_placement_fonction (AstType.Fonction(info, lp, li)) =
 let analyser (AstType.Programme (fonctions, prog)) =
   let nf = List.map (analyse_placement_fonction) fonctions in
   (* Le bloc principal commence a l'adresse 0 du registre SB *)
-  let nb = analyse_placement_bloc prog 0 "SB" in
-  AstPlacement.Programme (nf, nb)
+    let nb = analyse_placement_bloc prog 0 "SB" in
+    AstPlacement.Programme (nf, nb)

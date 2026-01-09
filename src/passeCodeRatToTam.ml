@@ -148,15 +148,23 @@ let rec analyse_code_instruction i =
   | AstPlacement.AffichageBool e -> (analyse_code_expression e) ^ (subr (label "BOut"))
   | AstPlacement.Conditionnelle (c, t, e) ->
     let sinon = getEtiquette () in 
-    let finsi = getEtiquette () in
-    (* Code : expression condition, saut si faux, bloc Then, saut fin, etiquette Sinon, bloc Else, etiquette Fin *)
-    (analyse_code_expression c) ^ (jumpif 0 (label sinon)) ^ (analyse_code_bloc t) ^ (jump (label finsi)) ^ (label sinon) ^ (analyse_code_bloc e) ^ (label finsi)
+      let finsi = getEtiquette () in
+      (* Code : expression condition, saut si faux, bloc Then, saut fin, etiquette Sinon, bloc Else, etiquette Fin *)
+      (analyse_code_expression c) ^ (jumpif 0 (label sinon)) ^ (analyse_code_bloc t) ^ (jump (label finsi)) ^ (label sinon) ^ (analyse_code_bloc e) ^ (label finsi)
   | AstPlacement.TantQue (c, b) ->
     let tantque = getEtiquette () in
-    let fintantque = getEtiquette () in
-    (label tantque) ^ (analyse_code_expression c) ^ (jumpif 0 (label fintantque)) ^ (analyse_code_bloc b) ^ (jump (label tantque)) ^ (label fintantque)
+      let fintantque = getEtiquette () in
+      (label tantque) ^ (analyse_code_expression c) ^ (jumpif 0 (label fintantque)) ^ (analyse_code_bloc b) ^ (jump (label tantque)) ^ (label fintantque)
   | AstPlacement.Retour (e, tailleRet, tailleParam) -> (analyse_code_expression e) ^ (return tailleRet tailleParam)
   | AstPlacement.Empty -> ""
+  | AstType.AppelProcedure (info, le) ->
+    begin
+      match info_ast_to_info info with
+      | InfoFun(s, _, _) ->
+        (* Evaluation des arguments de la gauche vers la droite puis appel *)
+        (List.fold_right (fun e acc -> (analyse_code_expression e) ^ acc) le "") ^ (call "SB" (label s))
+      | _ -> failwith "Erreur interne"
+    end
 
 
 (**************************************************************************************)
