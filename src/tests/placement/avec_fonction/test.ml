@@ -124,5 +124,15 @@ let%test "test12_f_r" =
     
 let%test "test12_f_i" = 
   test (pathFichiersRat^"test12.rat")  "f" ("i",1)  (-1, "LB")
-  
 
+let%test "testProcedure_x" = 
+  test (pathFichiersRat^"testProcedure1.rat")  "test" ("x",2)  (0, "SB")
+  
+let%test "testProcedure_y" = 
+  test (pathFichiersRat^"testProcedure1.rat")  "test" ("y",2)  (2, "SB")
+
+let%test "testProcedure_a" = 
+  test (pathFichiersRat^"testProcedure1.rat")  "printRAdd" ("a",2)  (-4, "LB")
+
+let%test "testProcedure_b" = 
+  test (pathFichiersRat^"testProcedure1.rat")  "printRAdd" ("b",2)  (-2, "LB")
