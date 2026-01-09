@@ -133,6 +133,14 @@ let rec analyse_tds_expression tds e =
       (* On trouve l'ident, on peut alors lire sa valeur. *)
       | Some i  -> AstTds.Adresse (i)
     end
+  | AstSyntax.TIdent n ->
+    begin
+      match Tds.chercherGlobalement tds n with
+      (* L'ident n'a pas encore ete declare. *)
+      | None    -> raise (Exceptions.IdentifiantNonDeclare n)
+      (* On trouve l'ident, on peut alors lire sa valeur. *)
+      | Some i  -> AstTds.TIdent (i)
+    end
 
 (**************************************************************************************)
 (* analyse_tds_instruction : tds -> info_ast option -> AstSyntax.instruction ->       *)
@@ -322,6 +330,16 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li))  =
             let nli = analyse_tds_bloc tdsFille (Some infoAst) li in
             AstTds.Fonction(t, infoAst, nlp, nli)
 
+let analyse_tds_enum maintds (AstSyntax.Enum(n, ids)) =
+  match chercherGlobalement maintds n with
+  | Some _ -> raise (Exceptions.DoubleDeclaration n)
+  | None ->
+    let nn = info_to_info_ast (Tds.InfoEnum(n, ids)) in
+    let nids = List.map (fun id -> info_to_info_ast (Tds.InfoIds(id))) ids in
+    (* On ajoute l'enum a la tds mere. *)
+    ajouter maintds n nn;
+    let _ = List.iter (fun id -> ajouter maintds id (info_to_info_ast (Tds.InfoIds(id)))) ids in
+    AstTds.Enum(nn, nids)
 
 (**************************************************************************************)
 (* analyser : AstSyntax.programme -> AstTds.programme                                 *)
@@ -330,11 +348,13 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li))  =
 (* en un programme de type AstTds.programme.                                          *)
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
-let analyser (AstSyntax.Programme (fonctions,prog)) =
+let analyser (AstSyntax.Programme (enum,fonctions,prog)) =
   (* Creation de la tds mere. *)
   let tds = creerTDSMere () in
+  (* Analyse des enums *)
+  let ne = List.map (analyse_tds_enum tds) enum in
     (* Analyse des fonctions. *)
     let nf = List.map (analyse_tds_fonction tds) fonctions in
       (* Analyse du bloc programme. *)
       let nb = analyse_tds_bloc tds None prog in
-      AstTds.Programme (nf,nb)
+      AstTds.Programme (ne,nf,nb)

@@ -39,6 +39,8 @@ open Ast.AstSyntax
 %token NEW
 %token PTR
 %token VOID
+%token ENUM
+%token <string> TID
 
 (* Type de l'attribut synthétisé des non-terminaux *)
 %type <programme> prog
@@ -49,15 +51,21 @@ open Ast.AstSyntax
 %type <typ*string> param
 %type <expression> e
 %type <affectable> a
+%type <enum> enum
+%type <string list> ids
 
 (* Type et définition de l'axiome *)
 %start <Ast.AstSyntax.programme> main
 
 %%
 
-main : lfi=prog EOF     {lfi}
+main : lfi=prog EOF  {lfi}
 
-prog : lf=fonc* ID li=bloc  {Programme (lf,li)}
+prog : le=enum* lf=fonc* ID li=bloc  {Programme (le,lf,li)}
+
+enum : ENUM n=TID AO i=ids AF PV  {Enum(n,i)}
+
+ids : ns=separated_nonempty_list(VIRG, TID)  {ns}
 
 fonc : t=typ n=ID PO lp=separated_list(VIRG,param) PF li=bloc {Fonction(t,n,lp,li)}
 
@@ -87,6 +95,7 @@ typ :
 | RAT           {Rat}
 | VOID          {Void}
 | t=typ MULT    {Ptr t}
+| TID          {TID}
 
 e : 
 | n=ID PO lp=separated_list(VIRG,e) PF   {AppelFonction (n,lp)}
@@ -106,3 +115,4 @@ e :
 | NULL                    {Null}
 | NEW t=typ               {New t}
 | PTR n=ID                {Adresse n}
+| n=TID                   {TIdent n}

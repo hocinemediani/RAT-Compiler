@@ -130,6 +130,9 @@ let%test_unit "testRecursiviteVariable" =
 let%test_unit "testPointeur1" = 
   let _ = compiler (pathFichiersRat^"testPointeur1.rat") in ()
 
+let%test_unit "testEnum1" = 
+  let _ = compiler (pathFichiersRat^"testEnum1.rat") in ()
+
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix
 open Filename

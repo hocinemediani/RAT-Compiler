@@ -123,6 +123,7 @@ let rec analyse_code_expression e =
       | InfoVar (_, _, depl, reg) -> (loada depl reg)
       | _ -> failwith "Erreur interne"
     end
+  | AstType.TIdent info -> failwith "blablabla"
 
 
 (**************************************************************************************)
@@ -196,5 +197,5 @@ let analyse_code_fonction (AstPlacement.Fonction(info, _, bloc)) =
 (* Genere l'entete TAM, le code des fonctions, le code du main, et termine par halt.  *)
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
-let analyser (AstPlacement.Programme (fonctions, prog)) =
+let analyser (AstPlacement.Programme (enum,fonctions, prog)) =
   getEntete() ^ (List.fold_right(fun i acc -> (analyse_code_fonction i) ^ acc) fonctions "") ^ (label "main") ^ (analyse_code_bloc prog) ^ halt

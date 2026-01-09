@@ -48,6 +48,7 @@ type expression =
   | New of typ
   (* Accès à l'adresse d'une variable. *)
   | Adresse of string
+  | TIdent of string
 
 
 (* Instructions de Rat *)
@@ -74,9 +75,13 @@ and instruction =
 (* type de retour - nom - liste des paramètres (association type et nom) - corps de la fonction *)
 type fonction = Fonction of typ * string * (typ * string) list * bloc
 
+type ids = string list
+
+type enum = Enum of string * ids
+
 (* Structure d'un programme Rat *)
 (* liste de fonction - programme principal *)
-type programme = Programme of fonction list * bloc
+type programme = Programme of enum list * fonction list * bloc
 
 end
 
@@ -104,6 +109,7 @@ struct
     | Null
     | New of typ
     | Adresse of Tds.info_ast
+    | TIdent of Tds.info_ast
 
   (* instructions existantes dans notre langage *)
   (* ~ instruction de l'AST syntaxique où les noms des identifiants ont été
@@ -124,9 +130,13 @@ struct
   (* Structure des fonctions dans notre langage *)
   (* type de retour - informations associées à l'identificateur (dont son nom) - liste des paramètres (association type et information sur les paramètres) - corps de la fonction *)
   type fonction = Fonction of typ * Tds.info_ast * (typ * Tds.info_ast ) list * bloc
+  
+  type ids = Tds.info_ast list
+
+  type enum = Enum of Tds.info_ast * ids
 
   (* Structure d'un programme dans notre langage *)
-  type programme = Programme of fonction list * bloc
+  type programme = Programme of enum list * fonction list * bloc
 
 end
 
@@ -141,7 +151,7 @@ struct
 type unaire = Numerateur | Denominateur
 
 (* Opérateurs binaires existants dans Rat - résolution de la surcharge *)
-type binaire = Fraction | PlusInt | PlusRat | MultInt | MultRat | EquInt | EquBool | Inf
+type binaire = Fraction | PlusInt | PlusRat | MultInt | MultRat | EquInt | EquBool | EquTID | Inf
 
   type affectable =
     | Ident of Tds.info_ast  (* le nom de l'identifiant est remplacé par ses informations *)
@@ -159,6 +169,7 @@ type expression =
   | Null
   | New of typ
   | Adresse of Tds.info_ast
+  | TIdent of Tds.info_ast
 
 (* instructions existantes Rat *)
 (* = instruction de AstTds + informations associées aux identificateurs, mises à jour *)
@@ -179,8 +190,12 @@ type bloc = instruction list
 (* informations associées à l'identificateur (dont son nom), liste des paramètres, corps *)
 type fonction = Fonction of Tds.info_ast * Tds.info_ast list * bloc
 
+type ids = Tds.info_ast list
+
+type enum = Enum of Tds.info_ast * ids
+
 (* Structure d'un programme dans notre langage *)
-type programme = Programme of fonction list * bloc
+type programme = Programme of enum list * fonction list * bloc
 
 end
 
@@ -214,7 +229,11 @@ type bloc = instruction list * int (* taille du bloc *)
 (* Plus besoin de la liste des paramètres mais on la garde pour les tests du placements mémoire *)
 type fonction = Fonction of Tds.info_ast * Tds.info_ast list * bloc
 
+type ids = Tds.info_ast list
+
+type enum = Enum of Tds.info_ast * ids
+
 (* Structure d'un programme dans notre langage *)
-type programme = Programme of fonction list * bloc
+type programme = Programme of enum list * fonction list * bloc
 
 end

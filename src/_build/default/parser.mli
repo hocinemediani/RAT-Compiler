@@ -6,6 +6,7 @@ type token =
   | VOID
   | VIRG
   | TRUE
+  | TID of (string)
   | SLASH
   | RETURN
   | RAT
@@ -26,6 +27,7 @@ type token =
   | FALSE
   | EQUAL
   | EOF
+  | ENUM
   | ENTIER of (int)
   | ELSE
   | DENOM

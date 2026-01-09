@@ -103,6 +103,8 @@ let analyse_placement_fonction (AstType.Fonction(info, lp, li)) =
       let nli = analyse_placement_bloc li 3 "LB" in
       AstPlacement.Fonction(info, lp, nli)
   
+let analyse_placement_enum (AstType.Enum(info, ids)) =
+  AstPlacement.Enum(info, ids)
 
 (**************************************************************************************)
 (* analyser : AstType.programme -> AstPlacement.programme                             *)
@@ -110,8 +112,9 @@ let analyse_placement_fonction (AstType.Fonction(info, lp, li)) =
 (* Lance le placement des fonctions et du bloc principal (sur SB).                    *)
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
-let analyser (AstType.Programme (fonctions, prog)) =
-  let nf = List.map (analyse_placement_fonction) fonctions in
-  (* Le bloc principal commence a l'adresse 0 du registre SB *)
-    let nb = analyse_placement_bloc prog 0 "SB" in
-    AstPlacement.Programme (nf, nb)
+let analyser (AstType.Programme (enum,fonctions, prog)) =
+  let ne = List.map (analyse_placement_enum) enum in
+    let nf = List.map (analyse_placement_fonction) fonctions in
+    (* Le bloc principal commence a l'adresse 0 du registre SB *)
+      let nb = analyse_placement_bloc prog 0 "SB" in
+      AstPlacement.Programme (ne, nf, nb)

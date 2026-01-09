@@ -22,6 +22,7 @@ let recuperer_type info =
   match info_ast_to_info info with
   | InfoVar(_, t, _, _) -> t
   | InfoFun(_, t, _)    -> t
+  | InfoIds _ -> TID
   | _ -> failwith "Erreur interne"
 
 
@@ -99,6 +100,7 @@ let rec analyse_type_expression e =
           | (Equ, Bool, Bool) -> (AstType.Binaire (EquBool, ne2, ne3), Bool)
           | (Inf, Int, Int) -> (AstType.Binaire (Inf, ne2, ne3), Bool)
           | (Fraction, Int, Int) -> (AstType.Binaire (Fraction, ne2, ne3), Rat)
+          | (Equ, TID, TID) -> (AstType.Binaire (EquTID, ne2, ne3), Bool)
           | _ -> raise (TypeBinaireInattendu (op, te2, te3))
     end
   (* Null n'etant pas un type, la convention de representation sera un pointeur undefined *)
@@ -110,6 +112,7 @@ let rec analyse_type_expression e =
       | _ -> raise (TypeInconnu t)
     end
   | AstTds.Adresse info -> (AstType.Adresse info, Ptr(recuperer_type info))
+  | AstTds.TIdent info -> (AstType.TIdent info, recuperer_type info)
 
 
 (**************************************************************************************)
@@ -201,6 +204,8 @@ let analyse_type_fonction (AstTds.Fonction(_, info, lp, li)) =
     let (_, nlpi) = List.split lp in
     AstType.Fonction(info, nlpi, nli)
   
+let analyse_type_enum (AstTds.Enum(info, ids)) =
+  AstType.Enum(info, ids)
 
 (**************************************************************************************)
 (* analyser : AstTds.programme -> AstType.programme                                   *)
@@ -209,7 +214,8 @@ let analyse_type_fonction (AstTds.Fonction(_, info, lp, li)) =
 (* en un programme de type AstType.programme.                                         *)
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
-let analyser (AstTds.Programme (fonctions,prog)) =
-  let nf = List.map (analyse_type_fonction) fonctions in
-    let nb = analyse_type_bloc prog in
-    AstType.Programme (nf, nb)
+let analyser (AstTds.Programme (enum,fonctions,prog)) =
+  let ne = List.map (analyse_type_enum) enum in
+    let nf = List.map (analyse_type_fonction) fonctions in
+      let nb = analyse_type_bloc prog in
+      AstType.Programme (ne, nf, nb)

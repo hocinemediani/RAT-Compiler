@@ -1,4 +1,4 @@
-type typ = Bool | Int | Rat | Ptr of typ | Void | Undefined
+type typ = Bool | Int | Rat | Ptr of typ | Void | TID | Undefined
 
 let rec string_of_type t = 
   match t with
@@ -7,6 +7,7 @@ let rec string_of_type t =
   | Rat  ->  "Rat"
   | Ptr(typ) -> "Pointeur de " ^ (string_of_type typ)
   | Void -> "Void"
+  | TID -> "TID"
   | Undefined -> "Undefined"
 
 let rec est_compatible t1 t2 =
@@ -19,6 +20,7 @@ let rec est_compatible t1 t2 =
   | Ptr Undefined, Ptr _ -> true
   | Ptr _, Ptr Undefined -> true
   | Void, Void -> true
+  | TID, TID -> true
   | _ -> false 
 
 let%test _ = est_compatible Bool Bool
@@ -63,6 +65,7 @@ let getTaille t =
   | Rat -> 2
   | Ptr _ -> 1
   | Void -> 0
+  | TID -> 1
   | Undefined -> 0
   
 let%test _ = getTaille Int = 1

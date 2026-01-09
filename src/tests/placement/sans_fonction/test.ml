@@ -189,3 +189,6 @@ let%test "testPointeur1_x" =
 
 let%test "testPointeur1_y" = 
   test (pathFichiersRat^"testPointeur1.rat") "main" ("y",1)  (2, "SB")
+
+let%test "testEnum1" = 
+  test (pathFichiersRat^"testEnum1.rat") "estDateRenduProjet" ("j",1)  (-4, "LB")

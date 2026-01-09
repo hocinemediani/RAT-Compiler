@@ -31,7 +31,8 @@
         "return",  RETURN;
         "null",    NULL;
         "new",     NEW;
-        "void",    VOID
+        "void",    VOID;
+        "enum",    ENUM
       ];
     fun id ->
       match Hashtbl.find_opt kws id with
@@ -69,6 +70,9 @@ rule token = parse
 (* identifiants et mots-clefs *)
 | ['a'-'z'](['A'-'Z''a'-'z''0'-'9']|"-"|"_")* as n
                { ident n }
+(* identifiants pour les énumérateurs et mots-clefs *)
+| ['A'-'Z'](['A'-'Z''a'-'z''0'-'9']|"-"|"_")* as n
+               { TID n }
 
 (* fin de lecture *)
 | eof          { EOF }
