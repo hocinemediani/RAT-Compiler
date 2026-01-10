@@ -103,6 +103,11 @@ let analyse_placement_fonction (AstType.Fonction(info, lp, li)) =
       let nli = analyse_placement_bloc li 3 "LB" in
       AstPlacement.Fonction(info, lp, nli)
   
+(**************************************************************************************)  
+(* analyse_placement_enum : AstType.enum -> AstPlacement.enum                        *)
+(* Parametre : l'enum a analyser.                                                    *)
+(* Transforme l'enum en un enum de type AstPlacement.enum.                           *)
+(**************************************************************************************)
 let analyse_placement_enum (AstType.Enum(info, ids)) =
   AstPlacement.Enum(info, ids)
 

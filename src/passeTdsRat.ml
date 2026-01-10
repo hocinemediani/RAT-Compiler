@@ -330,6 +330,15 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li))  =
             let nli = analyse_tds_bloc tdsFille (Some infoAst) li in
             AstTds.Fonction(t, infoAst, nlp, nli)
 
+(**************************************************************************************)
+(* analyse_tds_enum : tds -> AstSyntax.enum -> AstTds.enum                            *)
+(* Parametre tds : la table des symboles courante.                                    *)
+(* Parametre e : l'enum a analyser.                                                   *)
+(* Verifie la bonne utilisation des identifiants et tranforme l'enum                  *)
+(* en un enum de type AstTds.enum.                                                    *)
+(* Erreur si double declaration d'un identifiant.                                     *)
+(**************************************************************************************)
+
 let analyse_tds_enum maintds (AstSyntax.Enum(n, ids)) =
   match chercherGlobalement maintds n with
   | Some _ -> raise (Exceptions.DoubleDeclaration n)
