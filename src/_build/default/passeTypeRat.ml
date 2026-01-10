@@ -204,6 +204,13 @@ let analyse_type_fonction (AstTds.Fonction(_, info, lp, li)) =
     let (_, nlpi) = List.split lp in
     AstType.Fonction(info, nlpi, nli)
   
+(**************************************************************************************)
+(* analyse_type_enum : AstTds.enum -> AstType.enum                                    *)
+(* Parametre e : l'enum a analyser.                                                   *)
+(* Verifie la bonne utilisation des identifiants et tranforme l'enum                  *)
+(* en un enum de type AstType.enum.                                                   *)
+(* Erreur si double declaration d'un identifiant.                                     *)
+(**************************************************************************************)
 let analyse_type_enum (AstTds.Enum(info, ids)) =
   AstType.Enum(info, ids)
 
