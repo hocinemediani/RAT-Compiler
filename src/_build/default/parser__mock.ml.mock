@@ -293,20 +293,20 @@ and (xv_typ, xv_separated_nonempty_list_VIRG_param_, xv_separated_nonempty_list_
      in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
 # 98 "parser.mly"
- _1
+  n
 # 298 "parser__mock.ml.mock"
    : (
 # 43 "parser.mly"
        (string)
 # 302 "parser__mock.ml.mock"
-  )) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) : (
+  )) (_startpos_n_ : Lexing.position) (_endpos_n_ : Lexing.position) (_startofs_n_ : int) (_endofs_n_ : int) (_loc_n_ : Lexing.position * Lexing.position) : (
 # 50 "parser.mly"
       (typ)
 # 306 "parser__mock.ml.mock"
   ) ->
     (
 # 98 "parser.mly"
-               (TID)
+                 (TID n)
 # 311 "parser__mock.ml.mock"
      : 'tv_typ) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (

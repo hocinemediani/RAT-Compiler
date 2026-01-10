@@ -11,8 +11,8 @@ type info =
   | InfoFun of string * typ * typ list
   (* Information associée à un enum : son nom et la liste de ses valeurs *)
   | InfoEnum of string * string list
-  (* Information associée à un identifiant d'enum : son nom *)
-  | InfoIds of string
+  (* Information associée à un identificateur de type : son nom, le nom du type qu'il représente et sa position dans la liste *)
+  | InfoIds of string * string * int
 
 (* Table des symboles *)
 type tds 

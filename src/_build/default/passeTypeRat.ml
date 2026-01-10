@@ -22,7 +22,7 @@ let recuperer_type info =
   match info_ast_to_info info with
   | InfoVar(_, t, _, _) -> t
   | InfoFun(_, t, _)    -> t
-  | InfoIds _ -> TID
+  | InfoIds (_, n, _) -> TID n
   | _ -> failwith "Erreur interne"
 
 
@@ -100,7 +100,7 @@ let rec analyse_type_expression e =
           | (Equ, Bool, Bool) -> (AstType.Binaire (EquBool, ne2, ne3), Bool)
           | (Inf, Int, Int) -> (AstType.Binaire (Inf, ne2, ne3), Bool)
           | (Fraction, Int, Int) -> (AstType.Binaire (Fraction, ne2, ne3), Rat)
-          | (Equ, TID, TID) -> (AstType.Binaire (EquTID, ne2, ne3), Bool)
+          | (Equ, TID(n1), TID(n2)) when n1 = n2 -> (AstType.Binaire (EquTID, ne2, ne3), Bool)
           | _ -> raise (TypeBinaireInattendu (op, te2, te3))
     end
   (* Null n'etant pas un type, la convention de representation sera un pointeur undefined *)

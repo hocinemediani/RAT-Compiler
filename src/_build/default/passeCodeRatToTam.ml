@@ -110,6 +110,7 @@ let rec analyse_code_expression e =
         | EquBool -> subr (label "IEq")
         | Inf -> subr (label "ILss")
         | Fraction -> ""
+        | EquTID -> subr (label "IEq")
       )
     end
   (* Arbitrairement, Null est 0. *)
@@ -123,7 +124,12 @@ let rec analyse_code_expression e =
       | InfoVar (_, _, depl, reg) -> (loada depl reg)
       | _ -> failwith "Erreur interne"
     end
-  | AstType.TIdent info -> "trete"
+  | AstType.TIdent info ->
+    begin
+      match info_ast_to_info info with
+      | InfoIds (_, _, pos) -> (loadl_int pos)
+      | _ -> failwith "Erreur interne"
+    end
 
 
 (**************************************************************************************)

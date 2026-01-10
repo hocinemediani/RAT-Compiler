@@ -808,10 +808,10 @@ let _menhir_action_56 =
      : (Type.typ))
 
 let _menhir_action_57 =
-  fun () ->
+  fun n ->
     (
 # 98 "parser.mly"
-               (TID)
+                 (TID n)
 # 816 "parser.ml"
      : (Type.typ))
 
@@ -1061,8 +1061,8 @@ include struct
           _menhir_run_033 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState110
       | VOID ->
           _menhir_run_015 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState110
-      | TID _ ->
-          _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState110
+      | TID _v_0 ->
+          _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer _v_0 MenhirState110
       | RETURN ->
           _menhir_run_081 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState110
       | RAT ->
@@ -1225,8 +1225,8 @@ include struct
       match (_tok : MenhirBasics.token) with
       | VOID ->
           _menhir_run_015 _menhir_stack _menhir_lexbuf _menhir_lexer _menhir_s
-      | TID _ ->
-          _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer _menhir_s
+      | TID _v ->
+          _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer _v _menhir_s
       | RAT ->
           _menhir_run_017 _menhir_stack _menhir_lexbuf _menhir_lexer _menhir_s
       | INT ->
@@ -1236,10 +1236,11 @@ include struct
       | _ ->
           _eRR ()
   
-  and _menhir_run_016 : type  ttv_stack. ttv_stack -> _ -> _ -> (ttv_stack, _menhir_box_main) _menhir_state -> _menhir_box_main =
-    fun _menhir_stack _menhir_lexbuf _menhir_lexer _menhir_s ->
+  and _menhir_run_016 : type  ttv_stack. ttv_stack -> _ -> _ -> _ -> (ttv_stack, _menhir_box_main) _menhir_state -> _menhir_box_main =
+    fun _menhir_stack _menhir_lexbuf _menhir_lexer _v _menhir_s ->
       let _tok = _menhir_lexer _menhir_lexbuf in
-      let _v = _menhir_action_57 () in
+      let n = _v in
+      let _v = _menhir_action_57 n in
       _menhir_goto_typ _menhir_stack _menhir_lexbuf _menhir_lexer _v _menhir_s _tok
   
   and _menhir_run_017 : type  ttv_stack. ttv_stack -> _ -> _ -> (ttv_stack, _menhir_box_main) _menhir_state -> _menhir_box_main =
@@ -1772,8 +1773,8 @@ include struct
       match (_tok : MenhirBasics.token) with
       | VOID ->
           _menhir_run_015 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState120
-      | TID _ ->
-          _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState120
+      | TID _v_0 ->
+          _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer _v_0 MenhirState120
       | RAT ->
           _menhir_run_017 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState120
       | INT ->
@@ -1828,8 +1829,8 @@ include struct
           _menhir_run_033 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState032
       | VOID ->
           _menhir_run_015 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState032
-      | TID _ ->
-          _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState032
+      | TID _v ->
+          _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer _v MenhirState032
       | RETURN ->
           _menhir_run_081 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState032
       | RAT ->
@@ -2303,7 +2304,7 @@ include struct
           _menhir_run_021 _menhir_stack _menhir_lexbuf _menhir_lexer
       | ID _v_0 ->
           let _tok = _menhir_lexer _menhir_lexbuf in
-          let (t, n) = (_v, _v_0) in
+          let (n, t) = (_v_0, _v) in
           let _v = _menhir_action_44 n t in
           (match (_tok : MenhirBasics.token) with
           | VIRG ->
@@ -2313,8 +2314,8 @@ include struct
               (match (_tok : MenhirBasics.token) with
               | VOID ->
                   _menhir_run_015 _menhir_stack _menhir_lexbuf _menhir_lexer _menhir_s
-              | TID _ ->
-                  _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer _menhir_s
+              | TID _v ->
+                  _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer _v _menhir_s
               | RAT ->
                   _menhir_run_017 _menhir_stack _menhir_lexbuf _menhir_lexer _menhir_s
               | INT ->
@@ -2382,8 +2383,8 @@ include struct
               (match (_tok : MenhirBasics.token) with
               | VOID ->
                   _menhir_run_015 _menhir_stack _menhir_lexbuf _menhir_lexer _menhir_s
-              | TID _ ->
-                  _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer _menhir_s
+              | TID _v ->
+                  _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer _v _menhir_s
               | RAT ->
                   _menhir_run_017 _menhir_stack _menhir_lexbuf _menhir_lexer _menhir_s
               | INT ->
@@ -2406,8 +2407,8 @@ include struct
       match (_tok : MenhirBasics.token) with
       | VOID ->
           _menhir_run_015 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState014
-      | TID _ ->
-          _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState014
+      | TID _v_0 ->
+          _menhir_run_016 _menhir_stack _menhir_lexbuf _menhir_lexer _v_0 MenhirState014
       | RAT ->
           _menhir_run_017 _menhir_stack _menhir_lexbuf _menhir_lexer MenhirState014
       | INT ->

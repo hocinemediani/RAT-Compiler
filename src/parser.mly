@@ -95,7 +95,7 @@ typ :
 | RAT           {Rat}
 | VOID          {Void}
 | t=typ MULT    {Ptr t}
-| TID          {TID}
+| n=TID          {TID n}
 
 e : 
 | n=ID PO lp=separated_list(VIRG,e) PF   {AppelFonction (n,lp)}

@@ -335,10 +335,16 @@ let analyse_tds_enum maintds (AstSyntax.Enum(n, ids)) =
   | Some _ -> raise (Exceptions.DoubleDeclaration n)
   | None ->
     let nn = info_to_info_ast (Tds.InfoEnum(n, ids)) in
-    let nids = List.map (fun id -> info_to_info_ast (Tds.InfoIds(id))) ids in
-    (* On ajoute l'enum a la tds mere. *)
     ajouter maintds n nn;
-    let _ = List.iter (fun id -> ajouter maintds id (info_to_info_ast (Tds.InfoIds(id)))) ids in
+    let rec ajouter_valeurs liste_ids compteur =
+      match liste_ids with
+      | [] -> []
+      | id :: suite ->
+          let info_id = info_to_info_ast (Tds.InfoIds(id, n, compteur)) in
+          ajouter maintds id info_id;
+          info_id::(ajouter_valeurs suite (compteur + 1))
+    in
+    let nids = ajouter_valeurs ids 0 in
     AstTds.Enum(nn, nids)
 
 (**************************************************************************************)

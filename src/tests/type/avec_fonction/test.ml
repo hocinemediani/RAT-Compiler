@@ -121,6 +121,8 @@ let _ = compiler   (pathFichiersRat^"factrec.rat") in ()
 let%test_unit "testProcedure1" = 
 let _ = compiler   (pathFichiersRat^"testProcedure1.rat") in ()
 
+let%test_unit "testEnum1" = 
+  let _ = compiler (pathFichiersRat^"testEnum1.rat") in ()
 
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix

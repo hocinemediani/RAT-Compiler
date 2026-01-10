@@ -154,3 +154,6 @@ let%test "testProcedure_f_a" =
 
   let%test "testProcedure_f_b" = 
   test (pathFichiersRat^"testProcedure1.rat")  "f" ("b",1)  (-2, "LB")
+
+let%test "testEnum1" = 
+  test (pathFichiersRat^"testEnum1.rat") "estDateRenduProjet" ("j",1)  (-4, "LB")
