@@ -342,6 +342,7 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li))  =
             let nli = analyse_tds_bloc tdsFille (Some infoAst) li in
             AstTds.Fonction(t, infoAst, nlp, nli)
 
+
 (**************************************************************************************)
 (* analyse_tds_enum : tds -> AstSyntax.enum -> AstTds.enum                            *)
 (* Parametre tds : la table des symboles courante.                                    *)
@@ -350,23 +351,20 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li))  =
 (* en un enum de type AstTds.enum.                                                    *)
 (* Erreur si double declaration d'un identifiant.                                     *)
 (**************************************************************************************)
-
 let analyse_tds_enum maintds (AstSyntax.Enum(n, ids)) =
   match chercherGlobalement maintds n with
   | Some _ -> raise (Exceptions.DoubleDeclaration n)
   | None ->
     let nn = info_to_info_ast (Tds.InfoEnum(n, ids)) in
-    ajouter maintds n nn;
-    let rec ajouter_valeurs liste_ids compteur =
-      match liste_ids with
-      | [] -> []
-      | id :: suite ->
-          let info_id = info_to_info_ast (Tds.InfoIds(id, n, compteur)) in
-          ajouter maintds id info_id;
-          info_id::(ajouter_valeurs suite (compteur + 1))
-    in
-    let nids = ajouter_valeurs ids 0 in
-    AstTds.Enum(nn, nids)
+      ajouter maintds n nn;
+      let rec ajouter_valeurs liste_ids compteur =
+        match liste_ids with
+        | [] -> []
+        | id :: suite ->
+            let info_id = info_to_info_ast (Tds.InfoIds(id, n, compteur)) in
+              ajouter maintds id info_id;
+              info_id::(ajouter_valeurs suite (compteur + 1)) in
+            let nids = ajouter_valeurs ids 0 in AstTds.Enum (nn, nids)
 
 (**************************************************************************************)
 (* analyser : AstSyntax.programme -> AstTds.programme                                 *)
