@@ -286,7 +286,7 @@ let%test _ =
 let string_of_info info =
   match info with
   | InfoConst (n,value) -> "Constante "^n^" : "^(string_of_int value)
-  | InfoVar (n,t,dep,base,ref) -> "Variable "^n^" : "^(string_of_type t)^" "^(string_of_int dep)^"["^base^"]"
+  | InfoVar (n,t,dep,base,_) -> "Variable "^n^" : "^(string_of_type t)^" "^(string_of_int dep)^"["^base^"]"
   | InfoFun (n, t, tp) -> 
     "Fonction " ^ n ^ " : " ^ 
       (List.fold_right 
@@ -295,6 +295,8 @@ let string_of_info info =
            if tq = "" then type_str else type_str ^ " * " ^ tq) 
         tp "" ) ^
       " -> " ^ (string_of_type t)
+  | InfoEnum (n, lst) -> "Enum " ^ n ^ " : {" ^ (String.concat ", " lst) ^ "}"
+  | InfoIds (n, enum_name, value) -> "Identificateur d'enum " ^ n ^ " de l'enum " ^ enum_name ^ " : " ^ (string_of_int value)
 
 (* Affiche la tds locale *)
 let afficher_locale tds =

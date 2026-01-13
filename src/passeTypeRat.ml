@@ -52,7 +52,6 @@ let rec analyse_type_affectable a =
         | Ptr t -> (AstType.Deref na, t) (* On recupere le type pointe. *)
         | _ -> raise (TypeInattendu (ta, Ptr Undefined)) (* On attendait un pointeur. *)
       end
-  | _ -> failwith "Erreur interne"
 
 (**************************************************************************************)
 (* analyse_type_expression : AstTds.expression -> AstType.expression * typ            *)

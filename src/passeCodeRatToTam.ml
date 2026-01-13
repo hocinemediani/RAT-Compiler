@@ -3,7 +3,6 @@
 open Tds
 open Ast
 open Type
-open AstPlacement
 open Code
 open Tam
 
@@ -62,7 +61,7 @@ let rec analyse_code_affectable_lecture a =
 (* de l'affectable.                                                                   *)
 (* Erreur si l'affectable n'est pas une variable accessible.                          *)
 (**************************************************************************************)
-let rec analyse_code_affectable_ecriture a =
+let analyse_code_affectable_ecriture a =
   match a with
   | AstType.Ident info -> 
     begin
@@ -215,5 +214,5 @@ let analyse_code_fonction (AstPlacement.Fonction(info, _, bloc)) =
 (* Genere l'entete TAM, le code des fonctions, le code du main, et termine par halt.  *)
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
-let analyser (AstPlacement.Programme (enum,fonctions, prog)) =
+let analyser (AstPlacement.Programme (_,fonctions, prog)) =
   getEntete() ^ (List.fold_right(fun i acc -> (analyse_code_fonction i) ^ acc) fonctions "") ^ (label "main") ^ (analyse_code_bloc prog) ^ halt

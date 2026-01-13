@@ -30,7 +30,6 @@ let rec analyse_tds_affectable_lecture tds a =
       | Some i  -> (AstTds.Ident i)
     end
   | AstSyntax.Deref x -> AstTds.Deref (analyse_tds_affectable_lecture tds x)
-  | _ -> failwith "Erreur interne"
 
 
 (**************************************************************************************)
@@ -58,7 +57,6 @@ let rec analyse_tds_affectable_ecriture tds a =
         end
     end
   | AstSyntax.Deref x -> AstTds.Deref (analyse_tds_affectable_ecriture tds x)
-  | _ -> failwith "Erreur interne"
 
 
 (**************************************************************************************)
@@ -93,15 +91,20 @@ let rec analyse_tds_expression tds e =
     begin
       match a with
       | AstSyntax.Ident _ ->
-        let (AstTds.Ident i) = analyse_tds_affectable_lecture tds a in
-          begin
-            match info_ast_to_info i with
-            (* On propage les variables. *)
-            | Tds.InfoVar _         -> (AstTds.Affectable (AstTds.Ident i))
-            (* On transforme les constantes en expression Entier. *)
-            | Tds.InfoConst (_, v)  -> (AstTds.Entier v)
-            | Tds.InfoFun (n, _, _) -> raise(MauvaiseUtilisationIdentifiant n)
-          end
+        begin
+          match analyse_tds_affectable_lecture tds a with
+            | AstTds.Ident i ->
+              begin
+                match info_ast_to_info i with
+                (* On propage les variables. *)
+                | Tds.InfoVar _         -> (AstTds.Affectable (AstTds.Ident i))
+                (* On transforme les constantes en expression Entier. *)
+                | Tds.InfoConst (_, v)  -> (AstTds.Entier v)
+                | Tds.InfoFun (n, _, _) -> raise(MauvaiseUtilisationIdentifiant n)
+                | _ -> failwith "Erreur interne"
+              end
+            | AstTds.Deref _ -> failwith "Erreur interne"
+        end
       | AstSyntax.Deref _ -> (AstTds.Affectable (analyse_tds_affectable_lecture tds a))
 
     end
@@ -329,7 +332,6 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li))  =
     let tdsFille = creerTDSFille maintds in
     (* On recupere la liste des types, la liste des noms et la liste des refs des variables. *)
       let lt = List.map (fun (t, _, _) -> t) lp in
-      let ln = List.map (fun (_, n, _) -> n) lp in
       let lr = List.map (fun (_, _, r) -> r) lp in
       let ltr = List.map2 (fun t r -> (t, r)) lt lr in
       (* On transforme les informations en info_ast. *)

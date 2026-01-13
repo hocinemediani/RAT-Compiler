@@ -1,10 +1,8 @@
 (* Module de la passe de placement memoire *)
 (* doit etre conforme a l'interface Passe *)
 open Tds
-open Exceptions
 open Ast
 open Type
-open AstPlacement
 
 type t1 = Ast.AstType.programme
 type t2 = Ast.AstPlacement.programme

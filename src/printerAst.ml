@@ -51,9 +51,10 @@ struct
     | Inf -> "< "
 
   (* Conversion des affectables *)
-  let string_of_affectable a =
+  let rec string_of_affectable a =
     match a with
     | Ident n -> n
+    | Deref e -> "*( " ^ (string_of_affectable e) ^ ") "
 
   (* Conversion des expressions *)
   let rec string_of_expression e =
@@ -69,6 +70,11 @@ struct
           | Fraction -> "["^(string_of_expression e1)^"/"^(string_of_expression e2)^"] "
           | _ -> (string_of_expression e1)^(string_of_binaire b)^(string_of_expression e2)^" "
         end
+    | Null -> "null "
+    | Adresse n -> "adresse de " ^ n ^ " "
+    | New t -> "new " ^ (string_of_type t) ^ " "
+    | TIdent e1 -> "tident( " ^ e1 ^ ") "
+    | Reference e1 -> "ref( " ^ e1 ^ ") "
 
   (* Conversion des instructions *)
   let rec string_of_instruction i =
@@ -83,6 +89,7 @@ struct
     | TantQue (c,b) -> "TantQue  : TQ "^(string_of_expression c)^"\n"^
                                   "FAIRE \n"^((List.fold_right (fun i tq -> (string_of_instruction i)^tq) b ""))^"\n"
     | Retour (e) -> "Retour  : RETURN "^(string_of_expression e)^"\n"
+    | AppelProcedure (n,le) -> "AppelProcedure  : call "^n^"("^((List.fold_right (fun i tq -> (string_of_expression i)^tq) le ""))^") \n"
 
   (* Conversion des fonctions *)
   let string_of_fonction (Fonction(t,n,lp,li)) = (string_of_type t)^" "^n^" ("^((List.fold_right (fun (t,n,is_ref) tq -> (if is_ref then "ref " else "") ^ (string_of_type t)^" "^n^" "^tq) lp ""))^") = \n"^

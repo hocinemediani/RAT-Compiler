@@ -96,7 +96,7 @@ let analyser_param info =
     | _ -> failwith "Internal error"
 
   (* Renvoie la suite des adresses des variables déclarées dans les fonctions et dans le programme principal *)
-  let analyser (Ast.AstPlacement.Programme (enum, fonctions, (prog,_))) =
+  let analyser (Ast.AstPlacement.Programme (_, fonctions, (prog,_))) =
     ("main", List.flatten (List.map (analyser_instruction) prog))::(List.flatten (List.map (analyser_fonction) fonctions))
 
 end
