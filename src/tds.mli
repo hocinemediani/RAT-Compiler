@@ -5,10 +5,10 @@ type info =
   (* Information associée à une constante : son nom (non indispensable mais aide au test et debbugage) et sa valeur *)
   | InfoConst of string * int
   (* Information associée à une variable : son nom (non indispensable mais aide au test et debbugage),
-  son type, et son adresse ie son déplacement (int) par rapport à un registre (string) *)
-  | InfoVar of string * typ * int * string
-  (* Information associée à une fonction : son nom (utile pour l'appel), son type de retour et la liste des types des paramètres *)
-  | InfoFun of string * typ * typ list
+  son type, son adresse ie son déplacement (int) par rapport à un registre (string) et si c'est une référence *)
+  | InfoVar of string * typ * int * string * bool
+  (* Information associée à une fonction : son nom (utile pour l'appel), son type de retour et la liste (type * est_ref) des paramètres *)
+  | InfoFun of string * typ * (typ * bool) list
   (* Information associée à un enum : son nom et la liste de ses valeurs *)
   | InfoEnum of string * string list
   (* Information associée à un identificateur de type : son nom, le nom du type qu'il représente et sa position dans la liste *)
@@ -61,7 +61,7 @@ val info_ast_to_info : info_ast -> info
 val modifier_type_variable : typ -> info_ast -> unit
 
 (* Modifie les types de retour et des paramètres si c'est une InfoFun, ne fait rien sinon *)
-val modifier_type_fonction : typ -> typ list -> info_ast -> unit
+val modifier_type_fonction : typ -> (typ * bool) list -> info_ast -> unit
 
 (* Modifie l'emplacement (dépl, registre) si c'est une InfoVar, ne fait rien sinon *)
 val modifier_adresse_variable : int -> string -> info_ast -> unit

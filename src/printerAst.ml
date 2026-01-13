@@ -85,9 +85,10 @@ struct
     | Retour (e) -> "Retour  : RETURN "^(string_of_expression e)^"\n"
 
   (* Conversion des fonctions *)
-  let string_of_fonction (Fonction(t,n,lp,li)) = (string_of_type t)^" "^n^" ("^((List.fold_right (fun (t,n) tq -> (string_of_type t)^" "^n^" "^tq) lp ""))^") = \n"^
+  let string_of_fonction (Fonction(t,n,lp,li)) = (string_of_type t)^" "^n^" ("^((List.fold_right (fun (t,n,is_ref) tq -> (if is_ref then "ref " else "") ^ (string_of_type t)^" "^n^" "^tq) lp ""))^") = \n"^
                                         ((List.fold_right (fun i tq -> (string_of_instruction i)^tq) li ""))^"\n"
 
+  (* Conversion des énumérations *)
   let string_of_enum (Enum(n,ids)) =
     "Enum " ^ n ^ " { " ^ (String.concat ", " ids) ^ " }\n"
 

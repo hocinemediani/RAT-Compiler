@@ -25,7 +25,7 @@ let rec get_type_affectable a =
   | AstType.Ident info ->
     begin
       match info_ast_to_info info with
-      | InfoVar (_,t, _, _) -> t
+      | InfoVar (_,t, _, _, _) -> t
       | _ -> failwith "Erreur interne"
     end
   | AstType.Deref x ->
@@ -46,7 +46,8 @@ let rec analyse_code_affectable_lecture a =
   | AstType.Ident info -> 
     begin
       match info_ast_to_info info with
-      | InfoVar(_, t, depl, reg) -> (load (getTaille t) depl reg)
+      | InfoVar (_, t, depl, reg, false) -> (load (getTaille t) depl reg)
+      | InfoVar (_, t, depl, reg, true) -> (load 1 depl reg) ^ (loadi (getTaille t))
       | _ -> failwith "Erreur interne"
     end
   | AstType.Deref x ->
@@ -66,12 +67,13 @@ let rec analyse_code_affectable_ecriture a =
   | AstType.Ident info -> 
     begin
       match info_ast_to_info info with
-      | InfoVar(_, t, depl, reg) -> (store (getTaille t) depl reg)
+      | InfoVar (_, t, depl, reg, false) -> (store (getTaille t) depl reg)
+      | InfoVar (_, t, depl, reg, true) -> (load 1 depl reg) ^ (storei (getTaille t))
       | _ -> failwith "Erreur interne"
     end
   | AstType.Deref x ->
     let t = get_type_affectable x in
-      (analyse_code_affectable_ecriture x) ^ (storei (getTaille t))
+      (analyse_code_affectable_lecture x) ^ (storei (getTaille t))
 
 
 (**************************************************************************************)
@@ -121,13 +123,23 @@ let rec analyse_code_expression e =
     begin
       match info_ast_to_info info with
       (* On se place a l'adresse memoire de la variable. *)
-      | InfoVar (_, _, depl, reg) -> (loada depl reg)
+      | InfoVar (_, _, depl, reg, _) -> (loada depl reg)
       | _ -> failwith "Erreur interne"
     end
   | AstType.TIdent info ->
     begin
       match info_ast_to_info info with
       | InfoIds (_, _, pos) -> (loadl_int pos)
+      | _ -> failwith "Erreur interne"
+    end
+  | AstType.Reference info ->
+    begin
+      match info_ast_to_info info with
+      | InfoVar (_, _, depl, reg, is_ref) ->
+        if is_ref then
+          load 1 depl reg
+        else
+          loada depl reg
       | _ -> failwith "Erreur interne"
     end
 
@@ -144,7 +156,7 @@ let rec analyse_code_instruction i =
   | AstPlacement.Declaration (info, e) -> 
     begin
       match info_ast_to_info info with
-      | InfoVar(_, t, depl, reg) -> 
+      | InfoVar(_, t, depl, reg, _) -> 
         (* Allocation sur la pile, evaluation de l'expression, stockage *)
         (push (getTaille t)) ^ (analyse_code_expression e) ^ (store (getTaille t) depl reg)
       | _ ->  failwith "Erreur interne"

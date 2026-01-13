@@ -72,3 +72,15 @@ let%expect_test "procedure" =
 let%expect_test "enum1" =
   runtam (pathFichiersRat^"testEnum1.rat");
   [%expect{| falsetrue |}]
+
+let%expect_test "ref1" =
+  runtam (pathFichiersRat^"testRef1.rat");
+  [%expect{| 41 |}]
+
+let%expect_test "ref2" =
+  runtam (pathFichiersRat^"testRef2.rat");
+  [%expect{| 5556565758 |}]
+
+let%expect_test "ult1" =
+  runtam (pathFichiersRat^"testUltime1.rat");
+  [%expect{| 105101551051510751510 |}]

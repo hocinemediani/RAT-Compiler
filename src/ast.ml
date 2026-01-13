@@ -48,7 +48,10 @@ type expression =
   | New of typ
   (* Accès à l'adresse d'une variable. *)
   | Adresse of string
+  (* Identifiant de type enum. *)
   | TIdent of string
+  (* Référence à une variable. *)
+  | Reference of string
 
 
 (* Instructions de Rat *)
@@ -72,8 +75,8 @@ and instruction =
   | AppelProcedure of string * expression list
 
 (* Structure des fonctions de Rat *)
-(* type de retour - nom - liste des paramètres (association type et nom) - corps de la fonction *)
-type fonction = Fonction of typ * string * (typ * string) list * bloc
+(* type de retour - nom - liste des paramètres (association type, nom et est_ref) - corps de la fonction *)
+type fonction = Fonction of typ * string * (typ * string * bool) list * bloc
 
 type ids = string list
 
@@ -110,6 +113,7 @@ struct
     | New of typ
     | Adresse of Tds.info_ast
     | TIdent of Tds.info_ast
+    | Reference of Tds.info_ast
 
   (* instructions existantes dans notre langage *)
   (* ~ instruction de l'AST syntaxique où les noms des identifiants ont été
@@ -128,8 +132,8 @@ struct
 
 
   (* Structure des fonctions dans notre langage *)
-  (* type de retour - informations associées à l'identificateur (dont son nom) - liste des paramètres (association type et information sur les paramètres) - corps de la fonction *)
-  type fonction = Fonction of typ * Tds.info_ast * (typ * Tds.info_ast ) list * bloc
+  (* type de retour - informations associées à l'identificateur (dont son nom) - liste des paramètres (association type information sur les paramètres et est_ref) - corps de la fonction *)
+  type fonction = Fonction of typ * Tds.info_ast * (typ * Tds.info_ast * bool) list * bloc
   
   type ids = Tds.info_ast list
 
@@ -170,6 +174,7 @@ type expression =
   | New of typ
   | Adresse of Tds.info_ast
   | TIdent of Tds.info_ast
+  | Reference of Tds.info_ast
 
 (* instructions existantes Rat *)
 (* = instruction de AstTds + informations associées aux identificateurs, mises à jour *)

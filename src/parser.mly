@@ -41,6 +41,7 @@ open Ast.AstSyntax
 %token VOID
 %token ENUM
 %token <string> TID
+%token REF
 
 (* Type de l'attribut synthétisé des non-terminaux *)
 %type <programme> prog
@@ -48,7 +49,7 @@ open Ast.AstSyntax
 %type <fonction> fonc
 %type <instruction> i
 %type <typ> typ
-%type <typ*string> param
+%type <typ*string*bool> param
 %type <expression> e
 %type <affectable> a
 %type <enum> enum
@@ -69,7 +70,9 @@ ids : ns=separated_nonempty_list(VIRG, TID)  {ns}
 
 fonc : t=typ n=ID PO lp=separated_list(VIRG,param) PF li=bloc {Fonction(t,n,lp,li)}
 
-param : t=typ n=ID  {(t,n)}
+param : 
+| t=typ n=ID  {(t,n, false)}
+| REF t=typ n=ID {(t,n, true)}
 
 bloc : AO li=i* AF      {li}
 
@@ -116,3 +119,4 @@ e :
 | NEW t=typ               {New t}
 | PTR n=ID                {Adresse n}
 | n=TID                   {TIdent n}
+| REF n=ID                {Reference n}

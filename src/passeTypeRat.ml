@@ -20,11 +20,18 @@ type t2 = Ast.AstType.programme
 (**************************************************************************************)
 let recuperer_type info =
   match info_ast_to_info info with
-  | InfoVar(_, t, _, _) -> t
+  | InfoVar(_, t, _, _, _) -> t
   | InfoFun(_, t, _)    -> t
   | InfoIds (_, n, _) -> TID n
   | _ -> failwith "Erreur interne"
 
+(* Vérifie la compatibilité type ET mode de passage *)
+let est_compatible_param (type_attendu, est_ref_attendu) (expression_recue, type_recu) =
+  if not (Type.est_compatible type_attendu type_recu) then false
+  else
+    match expression_recue with
+    | AstType.Reference _ -> est_ref_attendu (* Si j'envoie une ref, il faut que la fonction attende une ref *)
+    | _ -> not est_ref_attendu (* Si j'envoie une valeur, il faut que la fonction n'attende PAS une ref *)
 
 (**************************************************************************************)
 (* analyse_type_affectable : AstTds.affectable -> AstType.affectable * typ            *)
@@ -47,7 +54,6 @@ let rec analyse_type_affectable a =
       end
   | _ -> failwith "Erreur interne"
 
-
 (**************************************************************************************)
 (* analyse_type_expression : AstTds.expression -> AstType.expression * typ            *)
 (* Parametre e : l'expression a analyser.                                             *)
@@ -63,10 +69,11 @@ let rec analyse_type_expression e =
         let (lne, lte) = List.split l in
           match info_ast_to_info info with
           | InfoFun(_, tr, ltp) ->
+            let ltpp = List.map (fun (t, _) -> t) ltp in
             (* Verification de la compatibilite des types des parametres *)
-            if Type.est_compatible_list ltp lte
+            if ((List.length ltp = List.length lne) && (List.for_all2 est_compatible_param ltp l))
             then (AstType.AppelFonction (info, lne), tr)
-            else raise (Exceptions.TypesParametresInattendus (lte, ltp))
+            else raise (Exceptions.TypesParametresInattendus (lte, ltpp))
           | _ -> failwith "Erreur interne"
     end
   | AstTds.Affectable a ->
@@ -113,6 +120,7 @@ let rec analyse_type_expression e =
     end
   | AstTds.Adresse info -> (AstType.Adresse info, Ptr(recuperer_type info))
   | AstTds.TIdent info -> (AstType.TIdent info, recuperer_type info)
+  | AstTds.Reference info -> (AstType.Reference info, (recuperer_type info))
 
 
 (**************************************************************************************)
@@ -173,10 +181,11 @@ let rec analyse_type_instruction i =
         let (lne, lte) = List.split l in
           match info_ast_to_info info with
           | InfoFun(_, tr, ltp) ->
+            let ltpp = List.map (fun (t, _) -> t) ltp in
             (* Verification de la compatibilite des types des parametres et la procedure est bien une procedure. *)
-            if ((Type.est_compatible_list ltp lte) && (est_compatible tr Void))
+            if (((List.length ltp = List.length lne) && (List.for_all2 est_compatible_param ltp l)) && (est_compatible tr Void))
             then (AstType.AppelProcedure (info, lne))
-            else raise (Exceptions.TypesParametresInattendus (lte, ltp))
+            else raise (Exceptions.TypesParametresInattendus (lte, ltpp))
           | _ -> failwith "Erreur interne"
     end
 
@@ -201,7 +210,7 @@ and analyse_type_bloc li =
 (**************************************************************************************)
 let analyse_type_fonction (AstTds.Fonction(_, info, lp, li)) =
   let nli = analyse_type_bloc li in
-    let (_, nlpi) = List.split lp in
+    let nlpi = List.map (fun (_, ia, _) -> ia) lp in
     AstType.Fonction(info, nlpi, nli)
   
 (**************************************************************************************)

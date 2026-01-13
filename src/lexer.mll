@@ -32,7 +32,8 @@
         "null",    NULL;
         "new",     NEW;
         "void",    VOID;
-        "enum",    ENUM
+        "enum",    ENUM;
+        "ref",     REF
       ];
     fun id ->
       match Hashtbl.find_opt kws id with

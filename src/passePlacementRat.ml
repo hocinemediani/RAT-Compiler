@@ -25,7 +25,7 @@ let rec analyse_placement_instruction i depl reg =
   | AstType.Declaration (info, e) ->
     begin
       match info_ast_to_info info with
-      | InfoVar (_, t, _, _) -> 
+      | InfoVar (_, t, _, _, _) -> 
         (* Mise a jour de l'adresse de la variable dans l'info_ast *)
         modifier_adresse_variable depl reg info;
         (AstPlacement.Declaration(info, e), getTaille t)
@@ -48,7 +48,7 @@ let rec analyse_placement_instruction i depl reg =
       match info_ast_to_info ia with
       | InfoFun(_, tr, tp) -> 
         (* Calcul de la taille des parametres pour le nettoyage de la pile *)
-        (AstPlacement.Retour (e, getTaille tr, (List.fold_right (fun t tq -> tq + (getTaille t)) tp 0)), 0)
+        (AstPlacement.Retour (e, getTaille tr, (List.fold_right (fun (t, is_ref) acc -> let taille = if is_ref then 1 else getTaille t in acc + taille) tp 0)), 0)
       | _ -> failwith "Erreur interne"
     end
   | AstType.Empty -> (AstPlacement.Empty, 0)
@@ -83,22 +83,24 @@ and analyse_placement_bloc li depl reg =
 (* Erreur si mauvaise utilisation des identifiants.                                   *)
 (**************************************************************************************)
 let analyse_placement_fonction (AstType.Fonction(info, lp, li)) =
+  (* Fonction auxilaire pour savoir si les parametres sont des references, donc de taille 1, ou non *)
+  let param_types_refs = match info_ast_to_info info with
+    | InfoFun(_, _, types) -> types
+    | _ -> failwith "Erreur interne : InfoFun attendu"
+  in
   (* Fonction auxiliaire pour placer les parametres en remontant depuis LB *)
-  let rec placement_variables lvar depl =
-    match lvar with
-    | [] -> ()
-    | ia::q ->
-      begin
-        match info_ast_to_info ia with
-        | InfoVar (_, t, _, _) ->
+  let rec placement_variables lvar ltype depl =
+    match lvar, ltype with
+    | [], [] -> ()
+    | ia::q, (t, is_ref)::qt ->
+      let taille = if is_ref then 1 else getTaille t in
           (* Calcul du deplacement : LB - taille totale parametres + offset *)
-          modifier_adresse_variable (depl - getTaille t) "LB" ia;
-          placement_variables q (depl - getTaille t)
-        | _ -> failwith "Erreur interne"
-      end
+      modifier_adresse_variable (depl - taille) "LB" ia;
+      placement_variables q qt (depl - taille)
+    | _ -> failwith "Erreur interne"
   in 
     (* Placement des parametres *)
-    let _ = placement_variables (List.rev lp) 0 in
+    let _ = placement_variables (List.rev lp) (List.rev param_types_refs) 0 in
       (* Placement du corps de la fonction : les locales commencent a LB + 3 (apres le chainage statique, etc) *)
       let nli = analyse_placement_bloc li 3 "LB" in
       AstPlacement.Fonction(info, lp, nli)
