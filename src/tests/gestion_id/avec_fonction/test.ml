@@ -192,11 +192,29 @@ let%test_unit "testRetourFonction"=
 let%test_unit "testProcedure1" = 
   let _ = compiler (pathFichiersRat^"testProcedure1.rat") in ()
 
+let%test_unit "testProcedure2" = 
+  let _ = compiler (pathFichiersRat^"testProcedure2.rat") in ()
+
+let%test_unit "testProcedure3" = 
+  let _ = compiler (pathFichiersRat^"testProcedure3.rat") in ()
+
 let%test_unit "testEnum1" = 
   let _ = compiler (pathFichiersRat^"testEnum1.rat") in ()
 
+let%test_unit "testEnum3" = 
+  let _ = compiler (pathFichiersRat^"testEnum3.rat") in ()
+
 let%test_unit "testRef1" = 
   let _ = compiler (pathFichiersRat^"testRef1.rat") in ()
+
+let%test_unit "testRef2" = 
+  let _ = compiler (pathFichiersRat^"testRef2.rat") in ()
+
+let%test_unit "testRef3" = 
+  let _ = compiler (pathFichiersRat^"testRef3.rat") in ()
+
+let%test_unit "testUltime1" =
+  let _ = compiler (pathFichiersRat^"testUltime1.rat") in ()
 
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix

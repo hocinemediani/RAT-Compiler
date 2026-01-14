@@ -189,3 +189,24 @@ let%test "testPointeur1_x" =
 
 let%test "testPointeur1_y" = 
   test (pathFichiersRat^"testPointeur1.rat") "main" ("y",1)  (2, "SB")
+
+let%test "testPointeur2_p1" = 
+  test (pathFichiersRat^"testPointeur2.rat") "main" ("p1",1) (1, "SB")
+
+let%test "testPointeur2_p2" = 
+  test (pathFichiersRat^"testPointeur2.rat") "main" ("p2",1) (2, "SB")
+
+let%test "testPointeurNull_a" = 
+  test (pathFichiersRat^"testPointeurNull.rat") "main" ("a",1) (0, "SB")
+
+let%test "testPointeurNull_p" = 
+  test (pathFichiersRat^"testPointeurNull.rat") "main" ("p",1) (1, "SB")
+
+let%test "testPointeurNull_b" = 
+  test (pathFichiersRat^"testPointeurNull.rat") "main" ("b",1) (2, "SB")
+
+let%test "testEnum2_c1" = 
+  test (pathFichiersRat^"testEnum2.rat") "main" ("c1",1) (0, "SB")
+
+let%test "testEnum2_c2" = 
+  test (pathFichiersRat^"testEnum2.rat") "main" ("c2",1) (1, "SB")

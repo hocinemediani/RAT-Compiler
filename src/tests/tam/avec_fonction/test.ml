@@ -65,13 +65,25 @@ let%expect_test "factrec" =
   runtam (pathFichiersRat^"factrec.rat");
   [%expect{| 120 |}]
 
-let%expect_test "procedure" =
+let%expect_test "procedure1" =
   runtam (pathFichiersRat^"testProcedure1.rat");
   [%expect{| [1/2][3/4][5/4] |}]
+
+let%expect_test "procedure2" =
+  runtam (pathFichiersRat^"testProcedure2.rat");
+  [%expect{| 3 |}]
+
+let%expect_test "procedure3" =
+  runtam (pathFichiersRat^"testProcedure3.rat");
+  [%expect{| 1[3/4] |}]
 
 let%expect_test "enum1" =
   runtam (pathFichiersRat^"testEnum1.rat");
   [%expect{| falsetrue |}]
+
+let%expect_test "enum3" =
+  runtam (pathFichiersRat^"testEnum3.rat");
+  [%expect{| 0 |}]
 
 let%expect_test "ref1" =
   runtam (pathFichiersRat^"testRef1.rat");
@@ -79,7 +91,11 @@ let%expect_test "ref1" =
 
 let%expect_test "ref2" =
   runtam (pathFichiersRat^"testRef2.rat");
-  [%expect{| 5556565758 |}]
+  [%expect{| 22 |}]
+
+let%expect_test "ref3" =
+  runtam (pathFichiersRat^"testRef3.rat");
+  [%expect{| [1/1] |}]
 
 let%expect_test "ult1" =
   runtam (pathFichiersRat^"testUltime1.rat");
