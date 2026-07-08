@@ -57,3 +57,14 @@ The project is structured around a multi-pass compilation process:
 * **Type Checking:** Validates that operations, variable assignments, and procedure calls respect strict typing rules. 
 * **Memory Placement:** Computes memory offsets and sizes (e.g., assigning a size of 1 for reference variables).
 * **Code Generation:** Translates the validated AST into TAM instructions, adapting memory read/write logic depending on whether a variable is a standard value or a reference.
+
+Shield: [![CC BY-NC-ND 4.0][cc-by-nc-nd-shield]][cc-by-nc-nd]
+
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International License][cc-by-nc-nd].
+
+[![CC BY-NC-ND 4.0][cc-by-nc-nd-image]][cc-by-nc-nd]
+
+[cc-by-nc-nd]: http://creativecommons.org/licenses/by-nc-nd/4.0/
+[cc-by-nc-nd-image]: https://licensebuttons.net/l/by-nc-nd/4.0/88x31.png
+[cc-by-nc-nd-shield]: https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg
